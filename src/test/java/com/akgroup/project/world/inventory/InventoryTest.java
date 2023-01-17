@@ -19,7 +19,7 @@ class InventoryTest {
     @Test
     void getItems() {
         inventory.addItemToInventory(knife);
-        assertTrue(inventory.getItems().contains(knife));
+        assertTrue(inventory.containsItem(knife));
     }
 
     @Test
@@ -31,31 +31,17 @@ class InventoryTest {
     @Test
     void isInventoryFull() {
         assertFalse(inventory.isInventoryFull());
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
-        inventory.addItemToInventory(knife);
+        for (int i = 0; i < inventory.getCapacity(); i++) {
+            inventory.addItemToInventory(knife);
+        }
         assertTrue(inventory.isInventoryFull());
     }
 
     @Test
     void addItemToInventory() {
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
-        assertTrue(inventory.addItemToInventory(knife));
+        for (int i = 0; i < inventory.getCapacity(); i++) {
+            assertTrue(inventory.addItemToInventory(knife));
+        }
         assertFalse(inventory.addItemToInventory(knife));
     }
 
@@ -63,13 +49,14 @@ class InventoryTest {
     void removeItem() {
         assertTrue(inventory.addItemToInventory(knife));
         inventory.removeItem(knife);
-        assertEquals(inventory.getItems().size(), 0);
+        assertFalse(inventory.containsItem(knife));
+        assertEquals(0, inventory.getHowManyItems());
     }
 
     @Test
     void removeItemFromIndex() {
         assertTrue(inventory.addItemToInventory(knife));
         inventory.removeItemFromIndex(0);
-        assertEquals(inventory.getItems().size(), 0);
+        assertEquals(0, inventory.getHowManyItems());
     }
 }
