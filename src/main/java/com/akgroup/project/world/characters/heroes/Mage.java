@@ -1,7 +1,7 @@
 package com.akgroup.project.world.characters.heroes;
 
 import com.akgroup.project.util.NumberGenerator;
-import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
+import com.akgroup.project.world.inventory.weapon.BasicWeapon;
 
 public class Mage extends AbstractHeroClass {
 
@@ -17,7 +17,7 @@ public class Mage extends AbstractHeroClass {
     }
 
     @Override
-    public AbstractWeapon getWeapon() {
+    public BasicWeapon getWeapon() {
         return NumberGenerator.randStartingWeaponForMage();
     }
 

@@ -1,9 +1,7 @@
 package com.akgroup.project.world.characters.heroes;
 
 import com.akgroup.project.util.NumberGenerator;
-import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
-import com.akgroup.project.world.inventory.weapon.basic.Stick;
-
+import com.akgroup.project.world.inventory.weapon.BasicWeapon;
 public class Fighter extends AbstractHeroClass {
 
     public Fighter() {
@@ -17,7 +15,7 @@ public class Fighter extends AbstractHeroClass {
     }
 
     @Override
-    public AbstractWeapon getWeapon() {
-        return new Stick();
+    public BasicWeapon getWeapon() {
+        return BasicWeapon.STICK;
     }
 }

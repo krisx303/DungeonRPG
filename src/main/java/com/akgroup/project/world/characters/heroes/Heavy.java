@@ -2,6 +2,7 @@ package com.akgroup.project.world.characters.heroes;
 
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
+import com.akgroup.project.world.inventory.weapon.BasicWeapon;
 import com.akgroup.project.world.inventory.weapon.basic.Knife;
 
 public class Heavy extends AbstractHeroClass {
@@ -18,8 +19,8 @@ public class Heavy extends AbstractHeroClass {
     }
 
     @Override
-    public AbstractWeapon getWeapon() {
-        return new Knife();
+    public BasicWeapon getWeapon() {
+        return BasicWeapon.KNIFE;
     }
 
 

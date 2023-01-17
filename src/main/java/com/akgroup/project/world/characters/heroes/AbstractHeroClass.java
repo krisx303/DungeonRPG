@@ -2,6 +2,7 @@ package com.akgroup.project.world.characters.heroes;
 
 import com.akgroup.project.world.characters.ICharacter;
 import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
+import com.akgroup.project.world.inventory.weapon.BasicWeapon;
 
 public abstract class AbstractHeroClass implements ICharacter {
     int health;
@@ -22,7 +23,7 @@ public abstract class AbstractHeroClass implements ICharacter {
 
     public abstract int findHealth();
 
-    public abstract AbstractWeapon getWeapon();
+    public abstract BasicWeapon getWeapon();
 
     public int getHealth() {
         if (health==0){

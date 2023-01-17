@@ -2,12 +2,12 @@ package com.akgroup.project.world.map;
 
 import com.akgroup.project.world.characters.heroes.AbstractHeroClass;
 import com.akgroup.project.world.inventory.Inventory;
-import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
+import com.akgroup.project.world.inventory.weapon.IWeapon;
 
 public class Hero {
     private final Inventory inventory;
     private int health;
-    private AbstractWeapon weapon;
+    private IWeapon weapon;
     private int money;
 
     public Hero(AbstractHeroClass character) {
@@ -21,7 +21,7 @@ public class Hero {
         return inventory;
     }
 
-    public AbstractWeapon getWeapon() {
+    public IWeapon getWeapon() {
         return weapon;
     }
 
@@ -37,7 +37,7 @@ public class Hero {
         this.health = health;
     }
 
-    public void setWeapon(AbstractWeapon weapon) {
+    public void setWeapon(IWeapon weapon) {
         this.weapon = weapon;
     }
 
