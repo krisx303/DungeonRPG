@@ -9,6 +9,7 @@ public class NumberGenerator {
         return random.nextInt(max - min + 1) + min;
     }
 
+
     public static String itemDroppingFromEnemy(int lvl, int changesForItem) {
 
         if (generateNextInt(1, 100) > changesForItem) {
