@@ -17,3 +17,4 @@ public class Hero {
         this.weapon = character.getWeapon();
     }
 }
+
