@@ -1,6 +1,8 @@
 package com.akgroup.project.world.characters.heroes;
 
 import com.akgroup.project.util.NumberGenerator;
+import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
+import com.akgroup.project.world.inventory.weapon.basic.Dagger;
 
 public class Ninja extends AbstractHeroClass {
 
@@ -15,7 +17,7 @@ public class Ninja extends AbstractHeroClass {
     }
 
     @Override
-    int findDamage() {
-        return NumberGenerator.generateNextInt(20, 25);
+    public AbstractWeapon getWeapon() {
+        return new Dagger();
     }
 }
