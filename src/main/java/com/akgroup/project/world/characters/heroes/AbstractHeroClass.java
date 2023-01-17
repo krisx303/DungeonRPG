@@ -1,6 +1,7 @@
 package com.akgroup.project.world.characters.heroes;
 
 import com.akgroup.project.world.characters.ICharacter;
+import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
 
 public abstract class AbstractHeroClass implements ICharacter {
     int health;
@@ -22,5 +23,9 @@ public abstract class AbstractHeroClass implements ICharacter {
 
     abstract int findHealth();
 
-    abstract int findDamage();
+    public abstract AbstractWeapon getWeapon();
+
+    public int getHealth() {
+        return health;
+    }
 }

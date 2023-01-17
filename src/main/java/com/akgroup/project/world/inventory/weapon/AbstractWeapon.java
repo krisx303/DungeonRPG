@@ -10,4 +10,12 @@ public abstract class AbstractWeapon implements IInventoryObject {
         this.damage = damage;
         this.size = size;
     }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public int getSize() {
+        return size;
+    }
 }

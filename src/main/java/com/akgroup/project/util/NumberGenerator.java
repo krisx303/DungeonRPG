@@ -1,5 +1,10 @@
 package com.akgroup.project.util;
 
+import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
+import com.akgroup.project.world.inventory.weapon.basic.Dagger;
+import com.akgroup.project.world.inventory.weapon.basic.Knife;
+import com.akgroup.project.world.inventory.weapon.basic.Stick;
+
 import java.util.Random;
 
 public class NumberGenerator {
@@ -45,6 +50,18 @@ public class NumberGenerator {
             }
         }
         return "SuperDagger";
+    }
+
+    public static AbstractWeapon randStartingWeaponForMage() {
+        int randNumber = generateNextInt(1, 6);
+        if (randNumber <= 3) {
+            return new Dagger();
+        }
+        if (randNumber <= 5) {
+            return new Knife();
+        }
+        return new Stick();
+
     }
 
 }

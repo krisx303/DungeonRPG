@@ -17,4 +17,8 @@ public abstract class AbstractEnemyClass implements ICharacter {
         this.damage = damage;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
 }
