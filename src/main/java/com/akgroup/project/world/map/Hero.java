@@ -5,16 +5,44 @@ import com.akgroup.project.world.inventory.Inventory;
 import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
 
 public class Hero {
-    private final AbstractHeroClass character;
     private final Inventory inventory;
     private int health;
     private AbstractWeapon weapon;
+    private int money;
 
-    public Hero(AbstractHeroClass character, Inventory inventory) {
-        this.character = character;
-        this.inventory = inventory;
-        this.health = character.getHealth();
+    public Hero(AbstractHeroClass character) {
+        this.inventory = new Inventory();
+        this.health = character.findHealth();
         this.weapon = character.getWeapon();
+        this.money = 0;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public AbstractWeapon getWeapon() {
+        return weapon;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void setWeapon(AbstractWeapon weapon) {
+        this.weapon = weapon;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 }
 

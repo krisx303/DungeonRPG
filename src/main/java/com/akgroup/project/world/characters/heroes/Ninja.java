@@ -12,8 +12,9 @@ public class Ninja extends AbstractHeroClass {
     }
 
     @Override
-    int findHealth() {
-        return NumberGenerator.generateNextInt(350, 450);
+    public int findHealth() {
+        health = NumberGenerator.generateNextInt(350, 450);
+        return health;
     }
 
     @Override

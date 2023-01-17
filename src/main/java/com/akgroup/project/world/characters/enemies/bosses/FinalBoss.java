@@ -5,6 +5,6 @@ import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
 public class FinalBoss extends AbstractEnemyClass {
 
     public FinalBoss() {
-        super(250, 100, 1000, 45);
+        super(120, 250, 100, 1000, 45);
     }
 }

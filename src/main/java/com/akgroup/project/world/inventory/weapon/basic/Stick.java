@@ -8,4 +8,9 @@ public class Stick extends AbstractWeapon {
     public Stick() {
         super(NumberGenerator.generateNextInt(32, 36), 50);
     }
+
+    @Override
+    public String toString() {
+        return "Stick{ damage: " + getDamage() + ", size: " + getSize() +"}";
+    }
 }

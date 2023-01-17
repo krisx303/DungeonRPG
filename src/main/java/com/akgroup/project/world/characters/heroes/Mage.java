@@ -6,13 +6,14 @@ import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
 public class Mage extends AbstractHeroClass {
 
 
-    public Mage(int crit, int dodge, int heal, int armor) {
+    public Mage() {
         super(1, 35, 70, 5);
     }
 
     @Override
-    int findHealth() {
-        return NumberGenerator.generateNextInt(450, 500);
+    public int findHealth() {
+        health = NumberGenerator.generateNextInt(450, 500);
+        return health;
     }
 
     @Override

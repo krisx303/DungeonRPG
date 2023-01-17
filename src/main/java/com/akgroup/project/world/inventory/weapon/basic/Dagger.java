@@ -8,4 +8,9 @@ public class Dagger extends AbstractWeapon {
     public Dagger() {
         super(NumberGenerator.generateNextInt(20, 25), 18);
     }
+
+    @Override
+    public String toString() {
+        return "Dagger{ damage: " + getDamage() + ", size: " + getSize() +"}";
+    }
 }

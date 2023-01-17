@@ -18,4 +18,5 @@ public abstract class AbstractWeapon implements IInventoryObject {
     public int getSize() {
         return size;
     }
+
 }

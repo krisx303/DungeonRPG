@@ -8,4 +8,8 @@ public class Knife extends AbstractWeapon {
     public Knife() {
         super(NumberGenerator.generateNextInt(17, 20), 30);
     }
+    @Override
+    public String toString() {
+        return "Knife{ damage: " + getDamage() + ", size: " + getSize() +"}";
+    }
 }

@@ -7,13 +7,14 @@ import com.akgroup.project.world.inventory.weapon.basic.Knife;
 public class Heavy extends AbstractHeroClass {
 
 
-    public Heavy(int crit, int dodge, int heal, int armor) {
+    public Heavy() {
         super(5, 2, 2, 25);
     }
 
     @Override
-    int findHealth() {
-        return NumberGenerator.generateNextInt(750, 850);
+    public int findHealth() {
+        health = NumberGenerator.generateNextInt(750, 850);
+        return health;
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
 
 public abstract class AbstractHeroClass implements ICharacter {
     int health;
-    int damage;
     //    percentage of dmg which won't be given in every attack
     int armor;
     //    3 values below are chances to crit (double dmg in one atack), dodge(don't get demage from enemies attack) and heal(get some additional health after attack)
@@ -21,11 +20,14 @@ public abstract class AbstractHeroClass implements ICharacter {
         this.armor = armor;
     }
 
-    abstract int findHealth();
+    public abstract int findHealth();
 
     public abstract AbstractWeapon getWeapon();
 
     public int getHealth() {
+        if (health==0){
+            health = findHealth();
+        }
         return health;
     }
 }
