@@ -1,6 +1,10 @@
 package com.akgroup.project.engine;
 
 import com.akgroup.project.graphics.FontManager;
+import com.akgroup.project.util.EntityDrop;
+import com.akgroup.project.util.NumberGenerator;
+import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
 
 import java.awt.*;
