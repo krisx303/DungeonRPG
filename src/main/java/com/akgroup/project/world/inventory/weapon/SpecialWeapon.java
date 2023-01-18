@@ -10,4 +10,5 @@ public enum SpecialWeapon implements IInventoryObject, IWeapon {
 
     SpecialWeapon(int damage, int size) {
     }
+
 }
