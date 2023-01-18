@@ -23,12 +23,16 @@ public class Animation {
     }
 
 
-    public BufferedImage getTexture() {
+    public BufferedImage getFrame() {
         if(delay == counter){
             counter = 0;
             currentFrame = (currentFrame+1) % frames.length;
         }
         counter++;
         return frames[currentFrame];
+    }
+
+    public BufferedImage getFirstFrame() {
+        return frames[0];
     }
 }

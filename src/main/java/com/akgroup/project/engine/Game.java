@@ -59,7 +59,7 @@ public class Game implements KeyListener, IGameObserver {
         int up = pressedKeys.contains(KeyEvent.VK_UP) ? -1 : 0;
         int down = pressedKeys.contains(KeyEvent.VK_DOWN) ? 1 : 0;
         worldPosition.move((left + right) * velocity, (up + down) * velocity);
-        player.update();
+        player.update(left + right, up + down);
     }
 
     public void render() {

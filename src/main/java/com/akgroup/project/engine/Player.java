@@ -12,7 +12,10 @@ import java.io.IOException;
 public class Player {
 
     private Animation currentAnimation;
-
+    private Animation animationToLeft;
+    private Animation animationToRight;
+    private Animation animationToUp;
+    private Animation animationToDown;
     private final int startX = 380;
     private final int startY = 380;
 
@@ -26,6 +29,10 @@ public class Player {
     private final WorldPosition worldPosition;
     private SpriteSheet spriteSheet;
 
+    private boolean playingAnimation = false;
+
+    private int direction = 0;
+
     public Player(WorldPosition worldPosition, WorldMap worldMap) {
         this.worldPosition = worldPosition;
         this.map = worldMap;
@@ -33,21 +40,46 @@ public class Player {
     }
 
 
-    public void update(){
+    public void update(int horizontal, int vertical){
         int playerX = worldPosition.getPositionX() + startX;
         int playerY = worldPosition.getPositionY() + startY;
         collision.update(playerX, playerY);
+        if((horizontal == 0 && vertical == 0)){
+            playingAnimation = false;
+        }else{
+            playingAnimation = true;
+            if(horizontal == 1){
+                currentAnimation = animationToRight;
+            }
+            else if(horizontal == -1){
+                currentAnimation = animationToLeft;
+            }
+            else if(vertical == -1){
+                currentAnimation = animationToUp;
+            }
+            else if(vertical == 1){
+                currentAnimation = animationToDown;
+            }
+        }
     }
 
     public void render(Graphics2D graphics2D) {
         graphics2D.setColor(new Color(71, 15, 183));
         graphics2D.fillRect(380, 380, 40, 40);
-        graphics2D.drawImage(currentAnimation.getTexture(), startX-25, startY-30, width*2, height*2, null);
+        BufferedImage frame = currentAnimation.getFrame();
+        if(!playingAnimation){
+            frame = currentAnimation.getFirstFrame();
+        }
+        graphics2D.drawImage(frame, startX-25, startY-30, width*2, height*2, null);
     }
 
     public void loadTextures() throws IOException {
         BufferedImage bufferedImage = SpriteLoader.loadSprite("entity/player.png");
         spriteSheet = new SpriteSheet(bufferedImage, 8, 4, 32, 32);
-        currentAnimation = spriteSheet.createAnimation(0);
+        animationToRight = spriteSheet.createAnimation(0);
+        animationToLeft = spriteSheet.createAnimation(1);
+        animationToDown = spriteSheet.createAnimation(2);
+        animationToUp = spriteSheet.createAnimation(3);
+        currentAnimation = animationToDown;
     }
 }
