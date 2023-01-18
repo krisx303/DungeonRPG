@@ -15,115 +15,49 @@ public class Game implements KeyListener {
 
     // private Player player;
 
+    private final PlayerCollision playerCollision;
+
+    private final WorldPosition worldPosition;
+
     // private EnemyEntity actualEnemyEntity;
 
-    private HashSet<Integer> pressedKeys;
+    private final HashSet<Integer> pressedKeys;
 
-    private WorldMap worldMap;
+    private final WorldMap worldMap;
 
-    private final float acc = 0.5f;
-    private final float deacc = 0.2f;
-    private final float maxYSpeed = 3.0f;
-    private final float maxXSpeed = 4.0f;
-    private int cameraX, cameraY;
-
-    private float dx, dy;
+    private final float velocity = 2.0f;
 
     public Game(Dimension dimension, Graphics2D graphics2D) {
         this.dimension = dimension;
         this.graphics2D = graphics2D;
         this.pressedKeys = new HashSet<>();
         this.worldMap = new WorldMap(this.graphics2D);
-        this.cameraX = 0;
-        this.cameraY = 0;
+        this.worldPosition = new WorldPosition();
+        this.playerCollision = new PlayerCollision(worldPosition, worldMap, 40, 40);
         worldMap.loadMapLevel();
     }
 
     public void update() {
-        changeDxAndDy();
-        cameraX += dx;
-        cameraY += dy;
-        int x = (400 - cameraX)/48;
-        int y = (400 - cameraY)/48;
         checkAndRepairPosition();
     }
 
     private void checkAndRepairPosition() {
-        // collision system demo
-        int upper = (400 - cameraY - 20)/48;
-        int lower = (400 - cameraY + 20)/48;
-        int onLeft= (400 - cameraX - 20)/48;
-        int onRight=(400 - cameraX + 20)/48;
-        boolean barrierUp = worldMap.hasBarrierOnPositionVertical(400 - cameraX, upper, 20, 48);
-        if(barrierUp) cameraY = 400 - (upper + 1) * 48 - 20;
-        boolean barrierDown = worldMap.hasBarrierOnPositionVertical(400 - cameraX, lower, 20, 48);
-        if(barrierDown) cameraY = 400 - (lower - 1) * 48 - 28;
-        boolean barrierLeft = worldMap.hasBarrierOnPositionHorizontal(400 - cameraY, onLeft, 20, 48);
-        if(barrierLeft) cameraX = 400 - (onLeft + 1) * 48 - 20;
-        boolean barrierRight = worldMap.hasBarrierOnPositionHorizontal(400 - cameraY, onRight, 20, 48);
-        if(barrierRight) cameraX = 400 - (onRight - 1) * 48 - 28;
-    }
-
-
-    private void changeDxAndDy() {
-        boolean left = pressedKeys.contains(KeyEvent.VK_LEFT);
-        boolean right = pressedKeys.contains(KeyEvent.VK_RIGHT);
-        boolean up = pressedKeys.contains(KeyEvent.VK_UP);
-        boolean down = pressedKeys.contains(KeyEvent.VK_DOWN);
-        if(down){
-            dy -= acc;
-            if(dy < -maxYSpeed)
-                dy = -maxYSpeed;
-        }
-        else {
-            if(dy < 0){
-                dy += deacc;
-                if(dy > 0)
-                    dy = 0;
-            }
-        }
-        if(up){
-            dy += acc;
-            if(dy > maxYSpeed)
-                dy = maxYSpeed;
-        }
-        else {
-            if(dy > 0){
-                dy -= deacc;
-                if(dy < 0)
-                    dy = 0;
-            }
-        }
-        if(right){
-            dx -= acc;
-            if(dx < -maxXSpeed)
-                dx = -maxXSpeed;
-        }
-        else {
-            if(dx < 0){
-                dx += deacc;
-                if(dx > 0)
-                    dx = 0;
-            }
-        }
-        if(left){
-            dx += acc;
-            if(dx > maxXSpeed)
-                dx = maxXSpeed;
-        }
-        else {
-            if(dx > 0){
-                dx -= deacc;
-                if(dx < 0)
-                    dx = 0;
-            }
-        }
+        int left = pressedKeys.contains(KeyEvent.VK_LEFT) ? -1 : 0;
+        int right = pressedKeys.contains(KeyEvent.VK_RIGHT) ? 1 : 0;
+        int up = pressedKeys.contains(KeyEvent.VK_UP) ? -1 : 0;
+        int down = pressedKeys.contains(KeyEvent.VK_DOWN) ? 1 : 0;
+        int vertical = up + down;
+        int horizontal = left + right;
+        worldPosition.move(horizontal * velocity, vertical * velocity);
+        int playerX = worldPosition.getPositionX() + 380;
+        int playerY = worldPosition.getPositionY() + 380;
+        playerCollision.update(playerX, playerY);
     }
 
     public void render() {
         graphics2D.setColor(new Color(33, 30, 39));
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
-        worldMap.render(cameraX, cameraY);
+        worldMap.render(worldPosition);
         graphics2D.setColor(new Color(71, 15, 183));
         graphics2D.fillRect(380, 380, 40, 40);
     }
