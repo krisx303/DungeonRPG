@@ -47,4 +47,8 @@ public class WorldMap {
     public boolean hasBarrierOnPosition(int x, int y){
         return currentLevel.hasBarrierOnPosition(x, y);
     }
+
+    public int getLevel() {
+        return levelID;
+    }
 }

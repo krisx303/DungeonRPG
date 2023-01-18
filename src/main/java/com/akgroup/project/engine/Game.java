@@ -2,6 +2,8 @@ package com.akgroup.project.engine;
 
 import com.akgroup.project.graphics.Font;
 import com.akgroup.project.graphics.SpriteLoader;
+import com.akgroup.project.util.EntityDrop;
+import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
@@ -13,7 +15,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashSet;
 
-/** Main game class. */
+/**
+ * Main game class.
+ */
 public class Game implements KeyListener {
     private final Graphics2D graphics2D;
 
@@ -51,14 +55,15 @@ public class Game implements KeyListener {
     }
 
     public void update() {
-        switch (gameStatus){
+        switch (gameStatus) {
             case CHARACTER_CHOOSING -> updateCharacterMenu();
             case IN_GAME -> updateGame();
-            case FIGHT_GAME -> {}
+            case FIGHT_GAME -> {
+            }
         }
     }
 
-    private void updateGame(){
+    private void updateGame() {
         int left = pressedKeys.contains(KeyEvent.VK_LEFT) ? -1 : 0;
         int right = pressedKeys.contains(KeyEvent.VK_RIGHT) ? 1 : 0;
         int up = pressedKeys.contains(KeyEvent.VK_UP) ? -1 : 0;
@@ -67,14 +72,14 @@ public class Game implements KeyListener {
         player.update();
     }
 
-    private void updateCharacterMenu(){
+    private void updateCharacterMenu() {
 
     }
 
     public void render() {
         graphics2D.setColor(new Color(33, 30, 39));
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
-        switch (gameStatus){
+        switch (gameStatus) {
             case CHARACTER_CHOOSING -> renderMenu();
             case IN_GAME -> renderGame();
             case FIGHT_GAME -> {
@@ -92,9 +97,9 @@ public class Game implements KeyListener {
         int x = 80;
         for (int i = 0; i < 4; i++) {
             graphics2D.setColor(new Color(119, 78, 0));
-            graphics2D.fillRect(x+160*i, 150, 150, 250);
+            graphics2D.fillRect(x + 160 * i, 150, 150, 250);
             graphics2D.setColor(new Color(33, 30, 39));
-            graphics2D.fillRect(x+5+160*i, 155, 140, 240);
+            graphics2D.fillRect(x + 5 + 160 * i, 155, 140, 240);
         }
     }
 
@@ -108,7 +113,7 @@ public class Game implements KeyListener {
 
     private void keyToggledOn(Integer keyCode) {
         System.out.println("toggle on: " + keyCode);
-        if(keyCode.equals(KeyEvent.VK_ENTER) && gameStatus == GameStatus.CHARACTER_CHOOSING){
+        if (keyCode.equals(KeyEvent.VK_ENTER) && gameStatus == GameStatus.CHARACTER_CHOOSING) {
             gameStatus = GameStatus.IN_GAME;
         }
     }
@@ -120,8 +125,12 @@ public class Game implements KeyListener {
 
     public boolean fight(Hero hero, AbstractEnemyClass enemy) {
         while (hero.getHealth() > 0 && enemy.getHealth() > 0) {
-            heroAttack(hero);
-            enemyAttack();
+            heroAttack(hero, enemy);
+            if (enemy.getHealth() <= 0) {
+                enemyDefeated(enemy, hero);
+                return true;
+            }
+            enemyAttack(enemy, hero);
         }
         if (hero.getHealth() <= 0) {
             gameOver();
@@ -130,19 +139,42 @@ public class Game implements KeyListener {
         return true;
     }
 
-    private void enemyAttack() {
+    private void enemyAttack(AbstractEnemyClass enemy, Hero hero) {
+        int dmgGiven = NumberGenerator.countDamageGiven(enemy.getDamage(), 0, 0);
+        takeDamageHero(hero, dmgGiven);
     }
 
-    private void heroAttack(Hero hero) {
-//        hero.getWeapon().
+    private void takeDamageHero(Hero hero, int dmgToTake) {
+        hero.setHealth(NumberGenerator.countDamageTaken(dmgToTake, hero.getArmor(), hero.getDodge()));
+    }
+
+    private void heroAttack(Hero hero, AbstractEnemyClass enemy) {
+        int dmgGiven = NumberGenerator.countDamageGiven(hero.getWeapon().getDamage(), hero.getCrit(), hero.getAdditionalDamage());
+        takeDamageEnemy(enemy, dmgGiven);
+    }
+
+    private void takeDamageEnemy(AbstractEnemyClass enemy, int dmgToTake) {
+        enemy.setHealth(Math.max(0, enemy.getHealth() - dmgToTake));
     }
 
     private void gameOver() {
         System.out.println("Game Over");
     }
 
+    private void enemyDefeated(AbstractEnemyClass enemy, Hero hero) {
+        EntityDrop entityDrop = new EntityDrop(worldMap.getLevel(), enemy);
+        updateHeroValues(entityDrop, hero);
+        System.out.println("You won with enemy");
+    }
+
+    private void updateHeroValues(EntityDrop entityDrop, Hero hero) {
+        hero.addExp(entityDrop.getExp());
+        hero.setMoney(hero.getMoney() + entityDrop.getMoney());
+    }
+
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {

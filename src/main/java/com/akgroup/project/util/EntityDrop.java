@@ -52,4 +52,16 @@ public class EntityDrop {
         }
         return SpecialWeapon.DAGGER;
     }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public int getExp() {
+        return exp;
+    }
+
+    public IInventoryObject getItem() {
+        return item;
+    }
 }
