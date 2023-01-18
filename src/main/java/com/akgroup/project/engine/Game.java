@@ -1,18 +1,16 @@
 package com.akgroup.project.engine;
 
-import com.akgroup.project.graphics.Font;
-import com.akgroup.project.graphics.SpriteLoader;
+import com.akgroup.project.graphics.FontManager;
 import com.akgroup.project.world.map.WorldMap;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashSet;
 
 /** Main game class. */
-public class Game implements KeyListener {
+public class Game implements KeyListener, IGameObserver {
     private final Graphics2D graphics2D;
 
     private final Dimension dimension;
@@ -27,10 +25,9 @@ public class Game implements KeyListener {
     private final WorldMap worldMap;
 
     private final int velocity = 3;
-
     private GameStatus gameStatus;
-    private Font font;
 
+    private final CharacterPanel characterPanel;
     public Game(Dimension dimension, Graphics2D graphics2D) {
         this.dimension = dimension;
         this.graphics2D = graphics2D;
@@ -38,19 +35,19 @@ public class Game implements KeyListener {
         this.worldMap = new WorldMap(this.graphics2D);
         this.worldPosition = new WorldPosition();
         this.player = new Player(worldPosition, worldMap);
+        this.characterPanel = new CharacterPanel(this);
     }
 
     public void initGame() throws IOException {
-        BufferedImage fontImage = SpriteLoader.loadSprite("font/font.png");
-        font = new Font(fontImage, 32, 38);
         player.loadTextures();
         worldMap.loadMapLevel();
         gameStatus = GameStatus.CHARACTER_CHOOSING;
+        FontManager.init(graphics2D);
+        characterPanel.init();
     }
 
     public void update() {
         switch (gameStatus){
-            case CHARACTER_CHOOSING -> updateCharacterMenu();
             case IN_GAME -> updateGame();
             case FIGHT_GAME -> {}
         }
@@ -65,15 +62,11 @@ public class Game implements KeyListener {
         player.update();
     }
 
-    private void updateCharacterMenu(){
-
-    }
-
     public void render() {
         graphics2D.setColor(new Color(33, 30, 39));
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
         switch (gameStatus){
-            case CHARACTER_CHOOSING -> renderMenu();
+            case CHARACTER_CHOOSING -> characterPanel.render(graphics2D);
             case IN_GAME -> renderGame();
             case FIGHT_GAME -> {
             }
@@ -85,17 +78,6 @@ public class Game implements KeyListener {
         player.render(graphics2D);
     }
 
-    private void renderMenu() {
-        font.drawStringOnCenter(graphics2D, "Wybierz klase", 0, 20, 800);
-        int x = 80;
-        for (int i = 0; i < 4; i++) {
-            graphics2D.setColor(new Color(119, 78, 0));
-            graphics2D.fillRect(x+160*i, 150, 150, 250);
-            graphics2D.setColor(new Color(33, 30, 39));
-            graphics2D.fillRect(x+5+160*i, 155, 140, 240);
-        }
-    }
-
     private int getHeight() {
         return dimension.height;
     }
@@ -105,15 +87,12 @@ public class Game implements KeyListener {
     }
 
     private void keyToggledOn(Integer keyCode) {
-        System.out.println("toggle on: " + keyCode);
-        if(keyCode.equals(KeyEvent.VK_ENTER) && gameStatus == GameStatus.CHARACTER_CHOOSING){
-            gameStatus = GameStatus.IN_GAME;
+        if(gameStatus.isCharacterChoosingMenu()){
+            characterPanel.onKeyClicked(keyCode);
         }
     }
 
-    private void keyToggledOff(Integer keyCode) {
-        System.out.println("toggle off: " + keyCode);
-    }
+    private void keyToggledOff(Integer keyCode) {}
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -129,5 +108,11 @@ public class Game implements KeyListener {
     public void keyReleased(KeyEvent e) {
         pressedKeys.remove(e.getKeyCode());
         keyToggledOff(e.getKeyCode());
+    }
+
+    @Override
+    public void onCharacterChoose(int classID) {
+        gameStatus = GameStatus.IN_GAME;
+        System.out.println("chosen class ID: " + classID);
     }
 }
