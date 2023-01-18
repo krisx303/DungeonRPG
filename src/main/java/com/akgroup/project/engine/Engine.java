@@ -38,7 +38,7 @@ public class Engine {
             int updateCount = 0;
             while (((now - lastUpdateTime) > TBU) && (updateCount < MUBR)) {
                 game.update();
-                game.input();
+                //game.input();
                 lastUpdateTime += TBU;
                 updateCount++;
 
@@ -47,7 +47,7 @@ public class Engine {
             if (now - lastUpdateTime > TBU) {
                 lastUpdateTime = now - TBU;
             }
-            game.input();
+            //game.input();
             game.render();
             panel.draw();
             lastRenderTime = now;

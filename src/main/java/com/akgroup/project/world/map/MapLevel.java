@@ -15,11 +15,12 @@ public class MapLevel {
     private HashSet<Vector2d> barriers;
     private HashMap<Vector2d, IMapObject> objects;
 
-    //TODO List of enemies on this map? Maybe also HashMap
-
     public MapLevel(){
         this.barriers = new HashSet<>();
         this.objects = new HashMap<>();
+        //TODO to remove
+        //TODO read barriers and objects from file
+        barriers.add(new Vector2d(1, 1));
     }
 
     public void setBackground(BufferedImage image) {
@@ -28,5 +29,9 @@ public class MapLevel {
 
     public BufferedImage getBackground() {
         return background;
+    }
+
+    public boolean hasBarrierOnPosition(int x, int y) {
+        return barriers.contains(new Vector2d(x, y));
     }
 }
