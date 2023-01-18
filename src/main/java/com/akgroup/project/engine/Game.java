@@ -1,10 +1,14 @@
 package com.akgroup.project.engine;
 
+import com.akgroup.project.graphics.Font;
+import com.akgroup.project.graphics.SpriteLoader;
 import com.akgroup.project.world.map.WorldMap;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashSet;
 
 /** Main game class. */
@@ -13,119 +17,83 @@ public class Game implements KeyListener {
 
     private final Dimension dimension;
 
-    // private Player player;
+    private final Player player;
+    private final WorldPosition worldPosition;
 
     // private EnemyEntity actualEnemyEntity;
 
-    private HashSet<Integer> pressedKeys;
+    private final HashSet<Integer> pressedKeys;
 
-    private WorldMap worldMap;
+    private final WorldMap worldMap;
 
-    private final float acc = 0.5f;
-    private final float deacc = 0.2f;
-    private final float maxYSpeed = 3.0f;
-    private final float maxXSpeed = 4.0f;
-    private int cameraX, cameraY;
+    private final int velocity = 3;
 
-    private float dx, dy;
+    private GameStatus gameStatus;
+    private Font font;
 
     public Game(Dimension dimension, Graphics2D graphics2D) {
         this.dimension = dimension;
         this.graphics2D = graphics2D;
         this.pressedKeys = new HashSet<>();
         this.worldMap = new WorldMap(this.graphics2D);
-        this.cameraX = 0;
-        this.cameraY = 0;
+        this.worldPosition = new WorldPosition();
+        this.player = new Player(worldPosition, worldMap);
+    }
+
+    public void initGame() throws IOException {
+        BufferedImage fontImage = SpriteLoader.loadSprite("font/font.png");
+        font = new Font(fontImage, 32, 38);
+        player.loadTextures();
         worldMap.loadMapLevel();
+        gameStatus = GameStatus.CHARACTER_CHOOSING;
     }
 
     public void update() {
-        changeDxAndDy();
-        cameraX += dx;
-        cameraY += dy;
-        int x = (400 - cameraX)/48;
-        int y = (400 - cameraY)/48;
-        checkAndRepairPosition();
+        switch (gameStatus){
+            case CHARACTER_CHOOSING -> updateCharacterMenu();
+            case IN_GAME -> updateGame();
+            case FIGHT_GAME -> {}
+        }
     }
 
-    private void checkAndRepairPosition() {
-        // collision system demo
-        int upper = (400 - cameraY - 20)/48;
-        int lower = (400 - cameraY + 20)/48;
-        int onLeft= (400 - cameraX - 20)/48;
-        int onRight=(400 - cameraX + 20)/48;
-        boolean barrierUp = worldMap.hasBarrierOnPositionVertical(400 - cameraX, upper, 20, 48);
-        if(barrierUp) cameraY = 400 - (upper + 1) * 48 - 20;
-        boolean barrierDown = worldMap.hasBarrierOnPositionVertical(400 - cameraX, lower, 20, 48);
-        if(barrierDown) cameraY = 400 - (lower - 1) * 48 - 28;
-        boolean barrierLeft = worldMap.hasBarrierOnPositionHorizontal(400 - cameraY, onLeft, 20, 48);
-        if(barrierLeft) cameraX = 400 - (onLeft + 1) * 48 - 20;
-        boolean barrierRight = worldMap.hasBarrierOnPositionHorizontal(400 - cameraY, onRight, 20, 48);
-        if(barrierRight) cameraX = 400 - (onRight - 1) * 48 - 28;
+    private void updateGame(){
+        int left = pressedKeys.contains(KeyEvent.VK_LEFT) ? -1 : 0;
+        int right = pressedKeys.contains(KeyEvent.VK_RIGHT) ? 1 : 0;
+        int up = pressedKeys.contains(KeyEvent.VK_UP) ? -1 : 0;
+        int down = pressedKeys.contains(KeyEvent.VK_DOWN) ? 1 : 0;
+        worldPosition.move((left + right) * velocity, (up + down) * velocity);
+        player.update();
     }
 
+    private void updateCharacterMenu(){
 
-    private void changeDxAndDy() {
-        boolean left = pressedKeys.contains(KeyEvent.VK_LEFT);
-        boolean right = pressedKeys.contains(KeyEvent.VK_RIGHT);
-        boolean up = pressedKeys.contains(KeyEvent.VK_UP);
-        boolean down = pressedKeys.contains(KeyEvent.VK_DOWN);
-        if(down){
-            dy -= acc;
-            if(dy < -maxYSpeed)
-                dy = -maxYSpeed;
-        }
-        else {
-            if(dy < 0){
-                dy += deacc;
-                if(dy > 0)
-                    dy = 0;
-            }
-        }
-        if(up){
-            dy += acc;
-            if(dy > maxYSpeed)
-                dy = maxYSpeed;
-        }
-        else {
-            if(dy > 0){
-                dy -= deacc;
-                if(dy < 0)
-                    dy = 0;
-            }
-        }
-        if(right){
-            dx -= acc;
-            if(dx < -maxXSpeed)
-                dx = -maxXSpeed;
-        }
-        else {
-            if(dx < 0){
-                dx += deacc;
-                if(dx > 0)
-                    dx = 0;
-            }
-        }
-        if(left){
-            dx += acc;
-            if(dx > maxXSpeed)
-                dx = maxXSpeed;
-        }
-        else {
-            if(dx > 0){
-                dx -= deacc;
-                if(dx < 0)
-                    dx = 0;
-            }
-        }
     }
 
     public void render() {
         graphics2D.setColor(new Color(33, 30, 39));
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
-        worldMap.render(cameraX, cameraY);
-        graphics2D.setColor(new Color(71, 15, 183));
-        graphics2D.fillRect(380, 380, 40, 40);
+        switch (gameStatus){
+            case CHARACTER_CHOOSING -> renderMenu();
+            case IN_GAME -> renderGame();
+            case FIGHT_GAME -> {
+            }
+        }
+    }
+
+    private void renderGame() {
+        worldMap.render(worldPosition);
+        player.render(graphics2D);
+    }
+
+    private void renderMenu() {
+        font.drawStringOnCenter(graphics2D, "Wybierz klase", 0, 20, 800);
+        int x = 80;
+        for (int i = 0; i < 4; i++) {
+            graphics2D.setColor(new Color(119, 78, 0));
+            graphics2D.fillRect(x+160*i, 150, 150, 250);
+            graphics2D.setColor(new Color(33, 30, 39));
+            graphics2D.fillRect(x+5+160*i, 155, 140, 240);
+        }
     }
 
     private int getHeight() {
@@ -138,6 +106,9 @@ public class Game implements KeyListener {
 
     private void keyToggledOn(Integer keyCode) {
         System.out.println("toggle on: " + keyCode);
+        if(keyCode.equals(KeyEvent.VK_ENTER) && gameStatus == GameStatus.CHARACTER_CHOOSING){
+            gameStatus = GameStatus.IN_GAME;
+        }
     }
 
     private void keyToggledOff(Integer keyCode) {

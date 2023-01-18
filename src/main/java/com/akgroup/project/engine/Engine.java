@@ -6,6 +6,7 @@ import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
 import com.akgroup.project.world.map.Hero;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class Engine {
 
@@ -23,6 +24,11 @@ public class Engine {
 
         game = new Game(dimension, panel.getGraphics2D());
         panel.addKeyListener(game);
+        try {
+            game.initGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

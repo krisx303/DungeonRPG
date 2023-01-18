@@ -34,4 +34,8 @@ public class MapLevel {
     public boolean hasBarrierOnPosition(int x, int y) {
         return barriers.contains(new Vector2d(x, y));
     }
+
+    public void addBarrier(Vector2d vector) {
+        barriers.add(vector);
+    }
 }
