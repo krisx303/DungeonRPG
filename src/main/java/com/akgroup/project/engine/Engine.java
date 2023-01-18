@@ -2,6 +2,8 @@ package com.akgroup.project.engine;
 
 import com.akgroup.project.gui.GameWindow;
 import com.akgroup.project.gui.Panel;
+import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.map.Hero;
 
 import java.awt.*;
 
@@ -10,11 +12,12 @@ public class Engine {
     private Game game;
     public final Dimension dimension;
     private Panel panel;
+
     public Engine(Dimension dimension) {
         this.dimension = dimension;
     }
 
-    public void init(){
+    public void init() {
         panel = new Panel(dimension);
         GameWindow window = new GameWindow(panel);
 
@@ -22,7 +25,9 @@ public class Engine {
         panel.addKeyListener(game);
     }
 
-    /** This method is responsible for keeping game working on 60 FPS and execute all updates.*/
+    /**
+     * This method is responsible for keeping game working on 60 FPS and execute all updates.
+     */
     public void infinityLoop() {
         final double GAME_FPS = 60.0;
         final double TBU = 1000000000 / GAME_FPS; //time before update
@@ -33,7 +38,7 @@ public class Engine {
         final double TTBR = 1000000000 / TARGET_FPS; //Total time before render
 
         int lastSecondTime = (int) (lastUpdateTime / 1000000000);
-        while (true){
+        while (true) {
             double now = System.nanoTime();
             int updateCount = 0;
             while (((now - lastUpdateTime) > TBU) && (updateCount < MUBR)) {
@@ -71,7 +76,6 @@ public class Engine {
             System.out.println("ERROR: yielding thread");
         }
     }
-
 
 
     public boolean fight(Hero hero, AbstractEnemyClass enemy) {
