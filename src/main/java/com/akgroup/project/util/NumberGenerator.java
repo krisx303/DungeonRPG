@@ -24,4 +24,26 @@ public class NumberGenerator {
 
     }
 
+    public static int countDamageTaken(int damage, int armor, int dodge) {
+        if (generateNextInt(0, 100) <= dodge) {
+            return 0;
+        }
+        return Math.toIntExact(Math.round(damage * (100 - armor)));
+    }
+
+    public static int countDamageGiven(int gunDamage, int critChances, int additionalDamage) {
+        int crit = 1;
+        if (generateNextInt(0, 100) <= critChances) {
+            crit = 2;
+        }
+        return (gunDamage + additionalDamage) * (crit);
+    }
+
+    public static int healDamage(int currHealth, int maxHealth, int healChances) {
+        if (generateNextInt(0, 100) <= healChances) {
+            return Math.min(currHealth + 20, maxHealth);
+        }
+        return currHealth;
+    }
+
 }

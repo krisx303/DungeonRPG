@@ -2,8 +2,6 @@ package com.akgroup.project.engine;
 
 import com.akgroup.project.gui.GameWindow;
 import com.akgroup.project.gui.Panel;
-import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
-import com.akgroup.project.world.map.Hero;
 
 import java.awt.*;
 import java.io.IOException;
@@ -52,9 +50,7 @@ public class Engine {
                 //game.input();
                 lastUpdateTime += TBU;
                 updateCount++;
-
             }
-
             if (now - lastUpdateTime > TBU) {
                 lastUpdateTime = now - TBU;
             }
@@ -83,28 +79,5 @@ public class Engine {
         }
     }
 
-
-    public boolean fight(Hero hero, AbstractEnemyClass enemy) {
-        while (hero.getHealth() > 0 && enemy.getHealth() > 0) {
-            heroAttack(hero);
-            enemyAttack();
-        }
-        if (hero.getHealth() <= 0) {
-            gameOver();
-            return false;
-        }
-        return true;
-    }
-
-    private void enemyAttack() {
-    }
-
-    private void heroAttack(Hero hero) {
-//        hero.getWeapon().
-    }
-
-    private void gameOver() {
-        System.out.println("Game Over");
-    }
 
 }

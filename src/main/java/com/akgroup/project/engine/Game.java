@@ -1,6 +1,10 @@
 package com.akgroup.project.engine;
 
 import com.akgroup.project.graphics.FontManager;
+import com.akgroup.project.util.EntityDrop;
+import com.akgroup.project.util.NumberGenerator;
+import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
 
 import java.awt.*;
@@ -94,8 +98,59 @@ public class Game implements KeyListener, IGameObserver {
 
     private void keyToggledOff(Integer keyCode) {}
 
+
+    public boolean fight(Hero hero, AbstractEnemyClass enemy) {
+        while (hero.getHealth() > 0 && enemy.getHealth() > 0) {
+            heroAttack(hero, enemy);
+            if (enemy.getHealth() <= 0) {
+                enemyDefeated(enemy, hero);
+                return true;
+            }
+            enemyAttack(enemy, hero);
+        }
+        if (hero.getHealth() <= 0) {
+            gameOver();
+            return false;
+        }
+        return true;
+    }
+
+    private void enemyAttack(AbstractEnemyClass enemy, Hero hero) {
+        int dmgGiven = NumberGenerator.countDamageGiven(enemy.getDamage(), 0, 0);
+        takeDamageHero(hero, dmgGiven);
+    }
+
+    private void takeDamageHero(Hero hero, int dmgToTake) {
+        hero.setHealth(NumberGenerator.countDamageTaken(dmgToTake, hero.getArmor(), hero.getDodge()));
+    }
+
+    private void heroAttack(Hero hero, AbstractEnemyClass enemy) {
+        int dmgGiven = NumberGenerator.countDamageGiven(hero.getWeapon().getDamage(), hero.getCrit(), hero.getAdditionalDamage());
+        takeDamageEnemy(enemy, dmgGiven);
+    }
+
+    private void takeDamageEnemy(AbstractEnemyClass enemy, int dmgToTake) {
+        enemy.setHealth(Math.max(0, enemy.getHealth() - dmgToTake));
+    }
+
+    private void gameOver() {
+        System.out.println("Game Over");
+    }
+
+    private void enemyDefeated(AbstractEnemyClass enemy, Hero hero) {
+        EntityDrop entityDrop = new EntityDrop(worldMap.getLevel(), enemy);
+        updateHeroValues(entityDrop, hero);
+        System.out.println("You won with enemy");
+    }
+
+    private void updateHeroValues(EntityDrop entityDrop, Hero hero) {
+        hero.addExp(entityDrop.getExp());
+        hero.setMoney(hero.getMoney() + entityDrop.getMoney());
+    }
+
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {

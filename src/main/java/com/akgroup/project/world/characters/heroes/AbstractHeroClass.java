@@ -1,7 +1,6 @@
 package com.akgroup.project.world.characters.heroes;
 
 import com.akgroup.project.world.characters.ICharacter;
-import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
 import com.akgroup.project.world.inventory.weapon.BasicWeapon;
 
 public abstract class AbstractHeroClass implements ICharacter {
@@ -30,5 +29,21 @@ public abstract class AbstractHeroClass implements ICharacter {
             health = findHealth();
         }
         return health;
+    }
+
+    public int getArmor() {
+        return armor;
+    }
+
+    public int getCrit() {
+        return crit;
+    }
+
+    public int getDodge() {
+        return dodge;
+    }
+
+    public int getHeal() {
+        return heal;
     }
 }
