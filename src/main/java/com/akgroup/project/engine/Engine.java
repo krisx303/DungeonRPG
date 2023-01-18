@@ -4,6 +4,7 @@ import com.akgroup.project.gui.GameWindow;
 import com.akgroup.project.gui.Panel;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class Engine {
 
@@ -20,6 +21,11 @@ public class Engine {
 
         game = new Game(dimension, panel.getGraphics2D());
         panel.addKeyListener(game);
+        try {
+            game.initGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /** This method is responsible for keeping game working on 60 FPS and execute all updates.*/

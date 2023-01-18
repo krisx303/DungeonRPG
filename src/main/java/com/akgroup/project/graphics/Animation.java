@@ -3,16 +3,16 @@ package com.akgroup.project.graphics;
 import java.awt.image.BufferedImage;
 
 public class Animation {
-    private BufferedImage[] frames;
+    private final BufferedImage[] frames;
 
     private int currentFrame;
 
-    private int delay;
+    private final int delay;
 
     private int counter;
 
     public Animation(BufferedImage[] frames){
-        this(frames, 2);
+        this(frames, 5);
     }
 
     public Animation(BufferedImage[] frames, int delay){
