@@ -82,4 +82,12 @@ public class Player {
         animationToUp = spriteSheet.createAnimation(3);
         currentAnimation = animationToDown;
     }
+
+    public int getXPosition(){
+        return worldPosition.getPositionX() + startX;
+    }
+
+    public int getYPosition(){
+        return worldPosition.getPositionY() + startY;
+    }
 }

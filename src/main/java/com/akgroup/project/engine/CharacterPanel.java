@@ -51,11 +51,7 @@ public class CharacterPanel {
             graphics2D.setColor(new Color(33, 30, 39));
             graphics2D.fillRect(x + 5 + 160 * i, 155, 140, 175);
             graphics2D.drawImage(heroesSprites.getSprite(0, i), x + 5 + 160 * i, 155, 140, 175, null);
-            if (i == actualChoice) {
-                blue.drawStringOnCenter(FontSize.SMALL_FONT, heroesClassNames[i], i * 160 + 80, 355, 150);
-            } else {
-                classic.drawStringOnCenter(FontSize.SMALL_FONT, heroesClassNames[i], i * 160 + 80, 355, 150);
-            }
+            classic.drawStringOnCenter(FontSize.SMALL_FONT, heroesClassNames[i], i * 160 + 80, 355, 150);
         }
         classic.drawStringOnCenter(FontSize.SMALL_FONT, "crit:", 2, 380, 120);
         classic.drawStringOnCenter(FontSize.SMALL_FONT, "dodge:", 2, 410, 120);

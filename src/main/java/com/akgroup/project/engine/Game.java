@@ -24,6 +24,8 @@ public class Game implements KeyListener, IGameObserver {
     private final Player player;
     private final WorldPosition worldPosition;
 
+    // private Dialog actualDialog;
+
     // private EnemyEntity actualEnemyEntity;
 
     private final HashSet<Integer> pressedKeys;
@@ -68,6 +70,9 @@ public class Game implements KeyListener, IGameObserver {
         int down = pressedKeys.contains(KeyEvent.VK_DOWN) ? 1 : 0;
         worldPosition.move((left + right) * velocity, (up + down) * velocity);
         player.update(left + right, up + down);
+        if(worldMap.hasDoorAtPosition(player.getXPosition()/48, player.getYPosition()/48)){
+            System.out.println("DRZWI KURWA");
+        }
     }
 
     public void render() {
@@ -76,6 +81,7 @@ public class Game implements KeyListener, IGameObserver {
         switch (gameStatus) {
             case CHARACTER_CHOOSING -> characterPanel.render(graphics2D);
             case IN_GAME -> renderGame();
+            //case OPENED_DIALOG -> {renderDialog()}
             case FIGHT_GAME -> {
             }
         }

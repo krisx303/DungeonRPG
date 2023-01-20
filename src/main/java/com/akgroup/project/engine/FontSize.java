@@ -2,7 +2,7 @@ package com.akgroup.project.engine;
 
 public enum FontSize {
     BIG_FONT(32, 36),
-    SMALL_FONT(18, 21);
+    SMALL_FONT(18, 20);
 
 
     public final int fontSize;

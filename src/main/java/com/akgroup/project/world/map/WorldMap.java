@@ -38,17 +38,19 @@ public class WorldMap {
         int x = -worldPosition.getPositionX();
         int y = -worldPosition.getPositionY();
         graphics2D.drawImage(currentLevel.getBackground(), x, y, 50*48, 50*48, null);
-        graphics2D.setColor(new Color(120, 30, 39));
-        graphics2D.fillRect(x+48, y+48, 48, 48);
         // render objects
         // render animations
     }
 
     public boolean hasBarrierOnPosition(int x, int y){
-        return currentLevel.hasBarrierOnPosition(x, y);
+        return currentLevel.hasBarrierAtPosition(x, y);
     }
 
     public int getLevel() {
         return levelID;
+    }
+
+    public boolean hasDoorAtPosition(int x, int y){
+        return currentLevel.hasDoorAtPosition(x, y);
     }
 }
