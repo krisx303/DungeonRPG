@@ -4,6 +4,7 @@ import com.akgroup.project.graphics.FontManager;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.inventory.IInventoryObject;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
 
@@ -154,6 +155,22 @@ public class Game implements KeyListener, IGameObserver {
             //TODO do sth
         }
         hero.setMoney(hero.getMoney() + entityDrop.getMoney());
+    }
+
+    public void buyItemFromShop(int itemIndex, Hero hero, Shop shop) {
+        if (hero.getInventory().isInventoryFull()) {
+            return;
+        }
+        if (shop.getValueOfiItemFromPosition(itemIndex) > hero.getMoney()) {
+            return;
+        }
+        IInventoryObject newItem = shop.getItemFromPosition(itemIndex);
+        if (newItem == null) {
+            return;
+        }
+        hero.setMoney(hero.getMoney() - shop.getValueOfiItemFromPosition(itemIndex));
+        hero.getInventory().addItemToInventory(newItem);
+        shop.removeItemFromPosition(itemIndex);
     }
 
     @Override

@@ -49,6 +49,10 @@ public class Shop {
         return itemsToBuy[position];
     }
 
+    public int getValueOfiItemFromPosition(int position) {
+        return prizes[position];
+    }
+
     public void removeItemFromPosition(int position) {
         if (position < 0 || position > 2) {
             return;
