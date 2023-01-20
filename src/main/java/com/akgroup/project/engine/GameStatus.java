@@ -5,9 +5,6 @@ public enum GameStatus {
     IN_GAME,
     FIGHT_GAME,
     INVENTORY,
-    OPENED_DIALOG;
-
-    public boolean isCharacterChoosingMenu() {
-        return this == CHARACTER_CHOOSING;
-    }
+    OPENED_DIALOG,
+    SHOP
 }

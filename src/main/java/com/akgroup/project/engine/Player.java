@@ -6,7 +6,6 @@ import com.akgroup.project.world.map.WorldMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class Player {
 
@@ -21,20 +20,13 @@ public class Player {
     private final int width = 40;
     private final int height = 40;
 
-    private final WorldMap map;
-
     private final PlayerCollision collision;
-
     private final WorldPosition worldPosition;
-    private SpriteSheet spriteSheet;
 
     private boolean playingAnimation = false;
 
-    private int direction = 0;
-
     public Player(WorldPosition worldPosition, WorldMap worldMap) {
         this.worldPosition = worldPosition;
-        this.map = worldMap;
         this.collision = new PlayerCollision(worldPosition, worldMap, width, height);
     }
 
@@ -63,8 +55,8 @@ public class Player {
     }
 
     public void render(Graphics2D graphics2D) {
-        graphics2D.setColor(new Color(71, 15, 183));
-        graphics2D.fillRect(380, 380, 40, 40);
+//        graphics2D.setColor(new Color(71, 15, 183));
+//        graphics2D.fillRect(380, 380, 40, 40);
         BufferedImage frame = currentAnimation.getFrame();
         if(!playingAnimation){
             frame = currentAnimation.getFirstFrame();
@@ -74,7 +66,7 @@ public class Player {
 
     public void loadTextures() {
         BufferedImage bufferedImage = SpriteManager.getSprite(Sprite.PLAYER);
-        spriteSheet = new SpriteSheet(bufferedImage, 8, 4, 32, 32);
+        SpriteSheet spriteSheet = new SpriteSheet(bufferedImage, 8, 4, 32, 32);
         animationToRight = spriteSheet.createAnimation(0);
         animationToLeft = spriteSheet.createAnimation(1);
         animationToDown = spriteSheet.createAnimation(2);

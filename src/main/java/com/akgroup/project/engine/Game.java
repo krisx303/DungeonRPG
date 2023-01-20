@@ -1,16 +1,15 @@
 package com.akgroup.project.engine;
 
-import com.akgroup.project.graphics.Font;
 import com.akgroup.project.graphics.FontManager;
-import com.akgroup.project.graphics.FontSize;
 import com.akgroup.project.graphics.SpriteManager;
+import com.akgroup.project.gui.views.CharacterInteractionView;
+import com.akgroup.project.gui.views.InteractionView;
+import com.akgroup.project.gui.views.ShopInteractionView;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
-import com.akgroup.project.world.inventory.IInventoryObject;
-import com.akgroup.project.world.inventory.mixtures.Potion;
-import com.akgroup.project.world.inventory.weapon.BasicWeapon;
+import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
 
@@ -31,8 +30,6 @@ public class Game implements KeyListener, IGameObserver {
     private final Player player;
     private final WorldPosition worldPosition;
 
-    // private Dialog actualDialog;
-
     // private EnemyEntity actualEnemyEntity;
 
     private final HashSet<Integer> pressedKeys;
@@ -41,8 +38,9 @@ public class Game implements KeyListener, IGameObserver {
 
     private final int velocity = 3;
     private GameStatus gameStatus;
-
-    private final CharacterPanel characterPanel;
+    private Shop shop;
+    private Hero hero;
+    private InteractionView interactionView;
 
 
 
@@ -53,7 +51,6 @@ public class Game implements KeyListener, IGameObserver {
         this.worldMap = new WorldMap(this.graphics2D);
         this.worldPosition = new WorldPosition();
         this.player = new Player(worldPosition, worldMap);
-        this.characterPanel = new CharacterPanel(this);
     }
 
     public void initGame() throws IOException {
@@ -62,14 +59,13 @@ public class Game implements KeyListener, IGameObserver {
         worldMap.loadMapLevel();
         gameStatus = GameStatus.CHARACTER_CHOOSING;
         FontManager.init(graphics2D);
-        characterPanel.init();
+        this.interactionView = new CharacterInteractionView(graphics2D, this);
+        this.shop = new Shop(1);
     }
 
     public void update() {
-        switch (gameStatus) {
-            case IN_GAME -> updateGame();
-            case FIGHT_GAME -> {
-            }
+        if (gameStatus == GameStatus.IN_GAME) {
+            updateGame();
         }
     }
 
@@ -101,13 +97,8 @@ public class Game implements KeyListener, IGameObserver {
         graphics2D.setColor(new Color(33, 30, 39));
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
         switch (gameStatus) {
-            case CHARACTER_CHOOSING -> characterPanel.render(graphics2D);
+            case CHARACTER_CHOOSING, SHOP -> interactionView.render();
             case IN_GAME -> renderGame();
-            case OPENED_DIALOG -> {
-//                renderShop(new IInventoryObject[]{BasicWeapon.STICK, Potion.HEALTH, BasicWeapon.DAGGER}, new int[]{50, 120, 2000}, 250);
-            }
-            case FIGHT_GAME -> {
-            }
         }
     }
 
@@ -123,29 +114,6 @@ public class Game implements KeyListener, IGameObserver {
 
     private int getWidth() {
         return dimension.width;
-    }
-
-    private void keyToggledOn(Integer keyCode) {
-        switch (gameStatus) {
-            case CHARACTER_CHOOSING:
-                characterPanel.onKeyClicked(keyCode);
-                break;
-            case IN_GAME:
-                if(keyCode.equals(KeyEvent.VK_B)){
-                    gameStatus = GameStatus.OPENED_DIALOG;
-                }
-                break;
-            case FIGHT_GAME:
-                break;
-            case INVENTORY:
-                break;
-            case OPENED_DIALOG:
-//                onKeyClicked(keyCode);
-                break;
-        }
-    }
-
-    private void keyToggledOff(Integer keyCode) {
     }
 
 
@@ -201,25 +169,25 @@ public class Game implements KeyListener, IGameObserver {
         hero.setMoney(hero.getMoney() + entityDrop.getMoney());
     }
 
-    public void buyItemFromShop(int itemIndex, Hero hero, Shop shop) {
-        if (hero.getInventory().isInventoryFull()) {
-            return;
+    private void keyToggledOn(Integer keyCode) {
+        switch (gameStatus) {
+            case CHARACTER_CHOOSING:
+            case SHOP:
+                interactionView.onKeyClicked(keyCode);
+                break;
+            case IN_GAME:
+                if(keyCode.equals(KeyEvent.VK_B)){
+                    gameStatus = GameStatus.SHOP;
+                    interactionView = new ShopInteractionView(graphics2D, this, shop, hero);
+                }
+                break;
         }
-        if (shop.getValueOfiItemFromPosition(itemIndex) > hero.getMoney()) {
-            return;
-        }
-        IInventoryObject newItem = shop.getItemFromPosition(itemIndex);
-        if (newItem == null) {
-            return;
-        }
-        hero.setMoney(hero.getMoney() - shop.getValueOfiItemFromPosition(itemIndex));
-        hero.getInventory().addItemToInventory(newItem);
-        shop.removeItemFromPosition(itemIndex);
     }
 
+    private void keyToggledOff(Integer keyCode) {}
+
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -236,7 +204,20 @@ public class Game implements KeyListener, IGameObserver {
 
     @Override
     public void onCharacterChoose(int classID) {
+        AbstractHeroClass heroClass;
+        switch (classID){
+            default -> heroClass = new Ninja();
+            case 1 -> heroClass = new Fighter();
+            case 2 -> heroClass = new Mage();
+            case 3 -> heroClass = new Heavy();
+        }
+        this.hero = new Hero(heroClass);
+        onInteractionExit();
+    }
+
+    @Override
+    public void onInteractionExit() {
         gameStatus = GameStatus.IN_GAME;
-        System.out.println("chosen class ID: " + classID);
+        interactionView = null;
     }
 }

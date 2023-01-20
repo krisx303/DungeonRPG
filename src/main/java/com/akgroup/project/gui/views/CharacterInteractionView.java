@@ -24,7 +24,7 @@ public class CharacterInteractionView extends InteractionView{
     private final String[] heroesArmorStats = new String[]{"1", "10", "5", "25"};
     private final String[] heroesWeapons = new String[]{"dagger", "stick", "random", "knife"};
 
-    protected CharacterInteractionView(Graphics2D graphics2D, IGameObserver observer) {
+    public CharacterInteractionView(Graphics2D graphics2D, IGameObserver observer) {
         super(graphics2D, observer);
     }
 

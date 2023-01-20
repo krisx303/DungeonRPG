@@ -6,8 +6,8 @@ import com.akgroup.project.world.inventory.mixtures.Potion;
 import com.akgroup.project.world.inventory.weapon.BasicWeapon;
 
 public class Shop {
-    private IInventoryObject[] itemsToBuy;
-    private int[] prizes;
+    private final IInventoryObject[] itemsToBuy;
+    private final int[] prizes;
 
     private final int level;
 
@@ -15,6 +15,7 @@ public class Shop {
         this.prizes = new int[3];
         this.itemsToBuy = new IInventoryObject[3];
         this.level = level;
+        this.randItems();
     }
 
     //    after creating new Shop you have to run shop.randItems(lvl)  !
@@ -24,16 +25,19 @@ public class Shop {
                 itemsToBuy[i] = Potion.HEALTH;
                 prizes[i] = level * 5 + 20;
             }
-            if (NumberGenerator.generateNextInt(0, 6) <= 3) {
+            else if (NumberGenerator.generateNextInt(0, 6) <= 3) {
                 itemsToBuy[i] = BasicWeapon.DAGGER;
                 prizes[i] = level * 15 + 30;
             }
-            if (NumberGenerator.generateNextInt(0, 6) <= 3) {
+            else if (NumberGenerator.generateNextInt(0, 6) <= 3) {
                 itemsToBuy[i] = BasicWeapon.KNIFE;
                 prizes[i] = level * 15 + 35;
             }
-            itemsToBuy[i] = BasicWeapon.STICK;
-            prizes[i] = level * 15 + 45;
+            else{
+                itemsToBuy[i] = BasicWeapon.STICK;
+                prizes[i] = level * 15 + 45;
+            }
+
         }
     }
 
