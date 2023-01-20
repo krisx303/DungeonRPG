@@ -45,20 +45,6 @@ public class Game implements KeyListener, IGameObserver {
     private final CharacterPanel characterPanel;
 
 
-    //    do wyjebania
-    private Font classic, blue;
-    private int actualChoice = 0;
-
-    public void onKeyClicked(Integer keyCode) {
-        if (keyCode.equals(KeyEvent.VK_RIGHT) && actualChoice < 2) {
-            actualChoice++;
-        }
-        if (keyCode.equals(KeyEvent.VK_LEFT) && actualChoice > 0) {
-            actualChoice--;
-        }
-    }
-
-//    już nie
 
     public Game(Dimension dimension, Graphics2D graphics2D) {
         this.dimension = dimension;
@@ -77,8 +63,6 @@ public class Game implements KeyListener, IGameObserver {
         gameStatus = GameStatus.CHARACTER_CHOOSING;
         FontManager.init(graphics2D);
         characterPanel.init();
-        this.classic = FontManager.getManager().getClassic();
-        this.blue = FontManager.getManager().getBlue();
     }
 
     public void update() {
@@ -120,40 +104,13 @@ public class Game implements KeyListener, IGameObserver {
             case CHARACTER_CHOOSING -> characterPanel.render(graphics2D);
             case IN_GAME -> renderGame();
             case OPENED_DIALOG -> {
-                renderShop(new IInventoryObject[]{BasicWeapon.STICK, Potion.HEALTH, BasicWeapon.DAGGER}, new int[]{50, 120, 2000}, 250);
+//                renderShop(new IInventoryObject[]{BasicWeapon.STICK, Potion.HEALTH, BasicWeapon.DAGGER}, new int[]{50, 120, 2000}, 250);
             }
             case FIGHT_GAME -> {
             }
         }
     }
 
-    private void renderShop(IInventoryObject[] table, int[] prizes, int money) {
-        classic.drawStringOnCenter(FontSize.BIG_FONT, "Shop", 0, 50, 800);
-        classic.drawStringOnCenter(FontSize.SMALL_FONT, "Money: " + money, 590, 10, 200);
-        int x = 50;
-        for (int i = 0; i < 3; i++) {
-            if (i == actualChoice) {
-                graphics2D.setColor(new Color(5, 119, 159));
-            } else {
-                graphics2D.setColor(new Color(119, 78, 0));
-            }
-            graphics2D.fillRect(x + 250 * i, 210, 200, 200);
-            graphics2D.setColor(new Color(33, 30, 39));
-            graphics2D.fillRect(x + 5 + 250 * i, 215, 190, 190);
-            if (table[i] != null) {
-                classic.drawStringOnCenter(FontSize.SMALL_FONT, table[i].getName(), x + 250 * i, 450, 200);
-                graphics2D.drawImage(SpriteManager.getSprite(table[i].getSprite()), x + 25 + 250 * i, 235, 150, 150, null);
-                classic.drawStringOnCenter(FontSize.SMALL_FONT, "Cost: "+ prizes[i], x + 250 * i, 500, 200);
-
-            }
-//            classic.drawStringOnCenter(FontSize.SMALL_FONT, heroesClassNames[i], i * 160 + 80, 355, 150);
-        }
-//        classic.drawStringOnCenter(FontSize.BIG_FONT, "Start journey", 0, 600, 800);
-        classic.drawStringOnCenter(FontSize.SMALL_FONT, "To buy item press enter on chosen one", 0, 650, 800);
-        classic.drawStringOnCenter(FontSize.SMALL_FONT, "Make sure you have enough space", 0, 700, 800);
-        classic.drawStringOnCenter(FontSize.SMALL_FONT, "in inventory to buy new item", 0, 720, 800);
-        classic.drawStringOnCenter(FontSize.SMALL_FONT, "Press esc to leave the shop", 0, 770, 800);
-    }
 
     private void renderGame() {
         worldMap.render(worldPosition);
@@ -183,7 +140,7 @@ public class Game implements KeyListener, IGameObserver {
             case INVENTORY:
                 break;
             case OPENED_DIALOG:
-                onKeyClicked(keyCode);
+//                onKeyClicked(keyCode);
                 break;
         }
     }
