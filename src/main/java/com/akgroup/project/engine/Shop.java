@@ -9,13 +9,13 @@ public class Shop {
     private IInventoryObject[] itemsToBuy;
     private int[] prizes;
 
-    public Shop(int lvl) {
+    public Shop() {
         this.prizes = new int[3];
         this.itemsToBuy = new IInventoryObject[3];
     }
 
     //    after creating new Shop you have to run shop.randItems(lvl)  !
-    private void randItems(int lvl) {
+    public void randItems(int lvl) {
         for (int i = 0; i < 3; i++) {
             if (NumberGenerator.generateNextInt(0, 100) <= 70) {
                 itemsToBuy[i] = Potion.HEALTH;

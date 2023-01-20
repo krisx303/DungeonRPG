@@ -13,4 +13,9 @@ public class Stick extends AbstractWeapon {
     public String toString() {
         return "Stick{ damage: " + getDamage() + ", size: " + getSize() +"}";
     }
+
+    @Override
+    public String getName() {
+        return "stick";
+    }
 }
