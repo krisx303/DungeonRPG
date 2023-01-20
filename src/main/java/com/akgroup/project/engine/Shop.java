@@ -9,28 +9,31 @@ public class Shop {
     private IInventoryObject[] itemsToBuy;
     private int[] prizes;
 
-    public Shop(int lvl) {
+    private final int level;
+
+    public Shop(int level) {
         this.prizes = new int[3];
         this.itemsToBuy = new IInventoryObject[3];
+        this.level = level;
     }
 
     //    after creating new Shop you have to run shop.randItems(lvl)  !
-    private void randItems(int lvl) {
+    public void randItems() {
         for (int i = 0; i < 3; i++) {
             if (NumberGenerator.generateNextInt(0, 100) <= 70) {
                 itemsToBuy[i] = Potion.HEALTH;
-                prizes[i] = lvl * 5 + 20;
+                prizes[i] = level * 5 + 20;
             }
             if (NumberGenerator.generateNextInt(0, 6) <= 3) {
                 itemsToBuy[i] = BasicWeapon.DAGGER;
-                prizes[i] = lvl * 15 + 30;
+                prizes[i] = level * 15 + 30;
             }
             if (NumberGenerator.generateNextInt(0, 6) <= 3) {
                 itemsToBuy[i] = BasicWeapon.KNIFE;
-                prizes[i] = lvl * 15 + 35;
+                prizes[i] = level * 15 + 35;
             }
             itemsToBuy[i] = BasicWeapon.STICK;
-            prizes[i] = lvl * 15 + 45;
+            prizes[i] = level * 15 + 45;
         }
     }
 

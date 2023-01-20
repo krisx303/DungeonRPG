@@ -1,7 +1,7 @@
 package com.akgroup.project.world.map;
 
 import com.akgroup.project.Main;
-import com.akgroup.project.graphics.SpriteLoader;
+import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.util.Vector2d;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +19,7 @@ public class MapLoader {
 
     public static MapLevel loadMapLevel(int level) throws IOException, ParserConfigurationException, SAXException {
         MapLevel mapLevel = new MapLevel();
-        BufferedImage background = SpriteLoader.loadSprite("dungeon level %d.png".formatted(level));
+        BufferedImage background = SpriteManager.loadBufferedImage("dungeon level %d.png".formatted(level));
         mapLevel.setBackground(background);
         loadTileMap(mapLevel, level);
         return mapLevel;

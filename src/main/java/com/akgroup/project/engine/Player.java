@@ -1,8 +1,7 @@
 package com.akgroup.project.engine;
 
-import com.akgroup.project.graphics.Animation;
-import com.akgroup.project.graphics.SpriteLoader;
-import com.akgroup.project.graphics.SpriteSheet;
+import com.akgroup.project.graphics.*;
+import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.map.WorldMap;
 
 import java.awt.*;
@@ -73,8 +72,8 @@ public class Player {
         graphics2D.drawImage(frame, startX-25, startY-30, width*2, height*2, null);
     }
 
-    public void loadTextures() throws IOException {
-        BufferedImage bufferedImage = SpriteLoader.loadSprite("entity/player.png");
+    public void loadTextures() {
+        BufferedImage bufferedImage = SpriteManager.getSprite(Sprite.PLAYER);
         spriteSheet = new SpriteSheet(bufferedImage, 8, 4, 32, 32);
         animationToRight = spriteSheet.createAnimation(0);
         animationToLeft = spriteSheet.createAnimation(1);
@@ -89,5 +88,13 @@ public class Player {
 
     public int getYPosition(){
         return worldPosition.getPositionY() + startY;
+    }
+
+    public Vector2d getPosition() {
+        return new Vector2d(getXPosition(), getYPosition());
+    }
+
+    public Vector2d getTilePosition(){
+        return new Vector2d(getXPosition()/48, getYPosition()/48);
     }
 }

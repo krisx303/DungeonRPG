@@ -18,9 +18,9 @@ public class FontManager {
 
     public static void init(Graphics2D graphics2D) throws IOException {
         if(INSTANCE != null) return;
-        BufferedImage fontImage = SpriteLoader.loadSprite("font/font.png");
+        BufferedImage fontImage = SpriteManager.getSprite(Sprite.CLASSIC_FONT);
         Font classic = new Font(fontImage, graphics2D);
-        BufferedImage fontImage2 = SpriteLoader.loadSprite("font/font_blue.png");
+        BufferedImage fontImage2 = SpriteManager.getSprite(Sprite.BLUE_FONT);
         Font blue = new Font(fontImage2, graphics2D);
         INSTANCE = new FontManager(classic, blue);
     }

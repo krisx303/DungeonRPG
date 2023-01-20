@@ -1,5 +1,7 @@
-package com.akgroup.project.engine;
+package com.akgroup.project.gui.views;
 
+import com.akgroup.project.engine.FontSize;
+import com.akgroup.project.engine.IGameObserver;
 import com.akgroup.project.graphics.*;
 import com.akgroup.project.graphics.Font;
 
@@ -7,7 +9,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-public class CharacterPanel {
+public class CharacterInteractionView extends InteractionView{
+
     private SpriteSheet heroesSprites;
 
     private Font classic;
@@ -21,20 +24,12 @@ public class CharacterPanel {
     private final String[] heroesArmorStats = new String[]{"1", "10", "5", "25"};
     private final String[] heroesWeapons = new String[]{"dagger", "stick", "random", "knife"};
 
-    private IGameObserver observer;
-
-    public CharacterPanel(IGameObserver observer) {
-        this.observer = observer;
+    protected CharacterInteractionView(Graphics2D graphics2D, IGameObserver observer) {
+        super(graphics2D, observer);
     }
 
-    public void init() {
-        BufferedImage heroes = SpriteManager.getSprite(Sprite.HEROES);
-        heroesSprites = new SpriteSheet(heroes, 4, 4, 24, 30);
-        this.classic = FontManager.getManager().getClassic();
-    }
-
-
-    public void render(Graphics2D graphics2D) {
+    @Override
+    public void render() {
         classic.drawStringOnCenter(FontSize.BIG_FONT, "Select class", 0, 20, 800);
         int x = 80;
         for (int i = 0; i < 4; i++) {
@@ -65,6 +60,7 @@ public class CharacterPanel {
         classic.drawStringOnCenter(FontSize.SMALL_FONT, "Press enter", 0, 650, 800);
     }
 
+    @Override
     public void onKeyClicked(Integer keyCode) {
         if (keyCode.equals(KeyEvent.VK_RIGHT) && actualChoice < 3) {
             actualChoice++;
@@ -75,5 +71,12 @@ public class CharacterPanel {
         if (keyCode.equals(KeyEvent.VK_ENTER)) {
             observer.onCharacterChoose(actualChoice);
         }
+    }
+
+    @Override
+    public void initView() {
+        BufferedImage heroes = SpriteManager.getSprite(Sprite.HEROES);
+        heroesSprites = new SpriteSheet(heroes, 4, 4, 24, 30);
+        this.classic = FontManager.getManager().getClassic();
     }
 }

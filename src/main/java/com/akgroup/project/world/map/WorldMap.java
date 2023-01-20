@@ -1,11 +1,13 @@
 package com.akgroup.project.world.map;
 
 import com.akgroup.project.engine.WorldPosition;
+import com.akgroup.project.util.Vector2d;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.IOException;
+import java.util.HashSet;
 
 /** Wrapper for MapLevel. It is also responsible for rendering all map elements.*/
 public class WorldMap {
@@ -15,10 +17,13 @@ public class WorldMap {
 
     //TODO List of enemies on this map? Maybe also HashMap
 
-    private Graphics2D graphics2D;
+    private final Graphics2D graphics2D;
+
+    private final HashSet<Integer> visitedRooms;
 
     public WorldMap(Graphics2D graphics2D){
         this.graphics2D = graphics2D;
+        this.visitedRooms = new HashSet<>();
     }
 
 
@@ -28,7 +33,6 @@ public class WorldMap {
         levelID = 1;
         try {
             currentLevel = MapLoader.loadMapLevel(levelID);
-
         } catch (IOException | ParserConfigurationException | SAXException e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +54,21 @@ public class WorldMap {
         return levelID;
     }
 
-    public boolean hasDoorAtPosition(int x, int y){
-        return currentLevel.hasDoorAtPosition(x, y);
+    public boolean hasDoorAtPosition(Vector2d position){
+        return currentLevel.hasDoorAtPosition(position);
+    }
+
+    public Integer getDoorAtPosition(Vector2d position) {
+        return currentLevel.getDoorAtPosition(position);
+    }
+
+    public boolean hasDoorToUnvisitedRoomAtPosition(Vector2d position) {
+        if(!hasDoorAtPosition(position)) return false;
+        int roomID = getRoomIDAtPosition(position);
+        return !visitedRooms.contains(roomID);
+    }
+
+    public int getRoomIDAtPosition(Vector2d position) {
+        return currentLevel.getRoomForDoor(position);
     }
 }

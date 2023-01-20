@@ -55,7 +55,15 @@ public class MapLevel {
         roomDoors.put(position, roomID);
     }
 
-    public boolean hasDoorAtPosition(int x, int y){
-        return roomDoors.containsKey(new Vector2d(x, y));
+    public boolean hasDoorAtPosition(Vector2d position){
+        return roomDoors.containsKey(position);
+    }
+
+    public Integer getDoorAtPosition(Vector2d position) {
+        return roomDoors.get(position);
+    }
+
+    public int getRoomForDoor(Vector2d position) {
+        return roomDoors.get(position);
     }
 }

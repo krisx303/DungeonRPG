@@ -1,8 +1,10 @@
 package com.akgroup.project.engine;
 
 import com.akgroup.project.graphics.FontManager;
+import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.NumberGenerator;
+import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
 import com.akgroup.project.world.inventory.IInventoryObject;
 import com.akgroup.project.world.map.Hero;
@@ -49,6 +51,7 @@ public class Game implements KeyListener, IGameObserver {
     }
 
     public void initGame() throws IOException {
+        SpriteManager.loadSprites();
         player.loadTextures();
         worldMap.loadMapLevel();
         gameStatus = GameStatus.CHARACTER_CHOOSING;
@@ -64,6 +67,8 @@ public class Game implements KeyListener, IGameObserver {
         }
     }
 
+    private int lastAskedRoomID = -1;
+
     private void updateGame() {
         int left = pressedKeys.contains(KeyEvent.VK_LEFT) ? -1 : 0;
         int right = pressedKeys.contains(KeyEvent.VK_RIGHT) ? 1 : 0;
@@ -71,8 +76,18 @@ public class Game implements KeyListener, IGameObserver {
         int down = pressedKeys.contains(KeyEvent.VK_DOWN) ? 1 : 0;
         worldPosition.move((left + right) * velocity, (up + down) * velocity);
         player.update(left + right, up + down);
-        if(worldMap.hasDoorAtPosition(player.getXPosition()/48, player.getYPosition()/48)){
-            System.out.println("DRZWI KURWA");
+        Vector2d playerPosition = player.getTilePosition();
+        if(worldMap.hasDoorToUnvisitedRoomAtPosition(playerPosition)) {
+            int roomID = worldMap.getRoomIDAtPosition(playerPosition);
+            if(roomID != lastAskedRoomID){
+                System.out.println("Open dialog for room with ID: " + roomID);
+                gameStatus = GameStatus.OPENED_DIALOG;
+                //TODO
+                //currentDialog = new RoomEnterDialog();
+                lastAskedRoomID = roomID;
+            }
+        }else{
+            lastAskedRoomID = -1;
         }
     }
 
