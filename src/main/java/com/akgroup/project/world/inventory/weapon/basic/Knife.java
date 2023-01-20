@@ -12,4 +12,9 @@ public class Knife extends AbstractWeapon {
     public String toString() {
         return "Knife{ damage: " + getDamage() + ", size: " + getSize() +"}";
     }
+
+    @Override
+    public String getName() {
+        return "knife";
+    }
 }

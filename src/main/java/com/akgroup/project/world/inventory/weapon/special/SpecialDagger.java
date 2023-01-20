@@ -7,4 +7,9 @@ public class SpecialDagger extends AbstractWeapon {
     public SpecialDagger() {
         super(60, 22);
     }
+
+    @Override
+    public String getName() {
+        return "Special dagger";
+    }
 }

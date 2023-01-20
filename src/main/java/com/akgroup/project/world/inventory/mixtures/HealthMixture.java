@@ -13,4 +13,9 @@ public class HealthMixture implements IInventoryObject {
     public int useMixture() {
         return strength;
     }
+
+    @Override
+    public String getName() {
+        return "Heal mixture";
+    }
 }

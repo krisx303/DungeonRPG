@@ -13,4 +13,9 @@ public class Dagger extends AbstractWeapon {
     public String toString() {
         return "Dagger{ damage: " + getDamage() + ", size: " + getSize() +"}";
     }
+
+    @Override
+    public String getName() {
+        return "dagger";
+    }
 }
