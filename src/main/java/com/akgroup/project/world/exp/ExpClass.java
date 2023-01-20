@@ -17,16 +17,19 @@ public class ExpClass {
         return currHeroLvl;
     }
 
-    public void increaseExp(int newExp) {
+    public int increaseExp(int newExp) {
         this.exp += exp;
-        increaseLvlIfNecessary();
+        return increaseLvlIfNecessary();
     }
 
-    private void increaseLvlIfNecessary() {
+    private int increaseLvlIfNecessary() {
+        int counter = 0;
         while (exp > LVL_RANGES[currHeroLvl]) {
             increaseLvl();
             increaseLvlIndex();
+            counter++;
         }
+        return counter;
     }
 
     private void increaseLvl() {

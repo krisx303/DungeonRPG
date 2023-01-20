@@ -77,8 +77,8 @@ public class Hero {
         return expClass.getCurrHeroLvl();
     }
 
-    public void addExp(int newExp) {
-        expClass.increaseExp(newExp);
+    public int addExp(int newExp) {
+        return expClass.increaseExp(newExp);
     }
 }
 

@@ -13,7 +13,9 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.HashSet;
 
-/** Main game class. */
+/**
+ * Main game class.
+ */
 public class Game implements KeyListener, IGameObserver {
     private final Graphics2D graphics2D;
 
@@ -32,6 +34,7 @@ public class Game implements KeyListener, IGameObserver {
     private GameStatus gameStatus;
 
     private final CharacterPanel characterPanel;
+
     public Game(Dimension dimension, Graphics2D graphics2D) {
         this.dimension = dimension;
         this.graphics2D = graphics2D;
@@ -51,13 +54,14 @@ public class Game implements KeyListener, IGameObserver {
     }
 
     public void update() {
-        switch (gameStatus){
+        switch (gameStatus) {
             case IN_GAME -> updateGame();
-            case FIGHT_GAME -> {}
+            case FIGHT_GAME -> {
+            }
         }
     }
 
-    private void updateGame(){
+    private void updateGame() {
         int left = pressedKeys.contains(KeyEvent.VK_LEFT) ? -1 : 0;
         int right = pressedKeys.contains(KeyEvent.VK_RIGHT) ? 1 : 0;
         int up = pressedKeys.contains(KeyEvent.VK_UP) ? -1 : 0;
@@ -69,7 +73,7 @@ public class Game implements KeyListener, IGameObserver {
     public void render() {
         graphics2D.setColor(new Color(33, 30, 39));
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
-        switch (gameStatus){
+        switch (gameStatus) {
             case CHARACTER_CHOOSING -> characterPanel.render(graphics2D);
             case IN_GAME -> renderGame();
             case FIGHT_GAME -> {
@@ -91,12 +95,13 @@ public class Game implements KeyListener, IGameObserver {
     }
 
     private void keyToggledOn(Integer keyCode) {
-        if(gameStatus.isCharacterChoosingMenu()){
+        if (gameStatus.isCharacterChoosingMenu()) {
             characterPanel.onKeyClicked(keyCode);
         }
     }
 
-    private void keyToggledOff(Integer keyCode) {}
+    private void keyToggledOff(Integer keyCode) {
+    }
 
 
     public boolean fight(Hero hero, AbstractEnemyClass enemy) {
@@ -144,7 +149,10 @@ public class Game implements KeyListener, IGameObserver {
     }
 
     private void updateHeroValues(EntityDrop entityDrop, Hero hero) {
-        hero.addExp(entityDrop.getExp());
+        int addedLvls = hero.addExp(entityDrop.getExp());
+        if (addedLvls > 0) {
+            //TODO do sth
+        }
         hero.setMoney(hero.getMoney() + entityDrop.getMoney());
     }
 
