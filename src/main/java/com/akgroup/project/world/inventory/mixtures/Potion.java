@@ -1,5 +1,6 @@
 package com.akgroup.project.world.inventory.mixtures;
 
+import com.akgroup.project.graphics.Sprite;
 import com.akgroup.project.world.inventory.IInventoryObject;
 
 public enum Potion implements IInventoryObject {
@@ -16,5 +17,10 @@ public enum Potion implements IInventoryObject {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return Sprite.HEAL_POTION;
     }
 }

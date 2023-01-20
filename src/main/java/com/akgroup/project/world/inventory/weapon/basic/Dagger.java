@@ -1,5 +1,6 @@
 package com.akgroup.project.world.inventory.weapon.basic;
 
+import com.akgroup.project.graphics.Sprite;
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.world.inventory.weapon.AbstractWeapon;
 
@@ -17,5 +18,10 @@ public class Dagger extends AbstractWeapon {
     @Override
     public String getName() {
         return "dagger";
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return Sprite.DAGGER;
     }
 }

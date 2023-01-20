@@ -1,5 +1,6 @@
 package com.akgroup.project.world.inventory.mixtures;
 
+import com.akgroup.project.graphics.Sprite;
 import com.akgroup.project.world.inventory.IInventoryObject;
 
 public class HealthMixture implements IInventoryObject {
@@ -17,5 +18,10 @@ public class HealthMixture implements IInventoryObject {
     @Override
     public String getName() {
         return "Heal mixture";
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return Sprite.HEAL_POTION;
     }
 }

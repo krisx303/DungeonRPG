@@ -2,6 +2,7 @@ package com.akgroup.project.engine;
 
 import com.akgroup.project.graphics.Font;
 import com.akgroup.project.graphics.FontManager;
+import com.akgroup.project.graphics.FontSize;
 import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.NumberGenerator;
@@ -16,9 +17,7 @@ import com.akgroup.project.world.map.WorldMap;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -49,17 +48,6 @@ public class Game implements KeyListener, IGameObserver {
     //    do wyjebania
     private Font classic, blue;
     private int actualChoice = 0;
-    private HashMap<String, BufferedImage> images;
-
-    public void init() throws IOException {
-        images = new HashMap<>();
-        this.classic = FontManager.getManager().getClassic();
-        this.blue = FontManager.getManager().getBlue();
-        images.put("heal potion", SpriteLoader.loadSprite("item/potion.png"));
-        images.put("knife", SpriteLoader.loadSprite("item/knife.png"));
-        images.put("dagger", SpriteLoader.loadSprite("item/dagger.png"));
-        images.put("stick", SpriteLoader.loadSprite("item/stick.png"));
-    }
 
     public void onKeyClicked(Integer keyCode) {
         if (keyCode.equals(KeyEvent.VK_RIGHT) && actualChoice < 2) {
@@ -89,7 +77,8 @@ public class Game implements KeyListener, IGameObserver {
         gameStatus = GameStatus.CHARACTER_CHOOSING;
         FontManager.init(graphics2D);
         characterPanel.init();
-        init();
+        this.classic = FontManager.getManager().getClassic();
+        this.blue = FontManager.getManager().getBlue();
     }
 
     public void update() {
@@ -153,7 +142,7 @@ public class Game implements KeyListener, IGameObserver {
             graphics2D.fillRect(x + 5 + 250 * i, 215, 190, 190);
             if (table[i] != null) {
                 classic.drawStringOnCenter(FontSize.SMALL_FONT, table[i].getName(), x + 250 * i, 450, 200);
-                graphics2D.drawImage(images.get(table[i].getName()), x + 25 + 250 * i, 235, 150, 150, null);
+                graphics2D.drawImage(SpriteManager.getSprite(table[i].getSprite()), x + 25 + 250 * i, 235, 150, 150, null);
                 classic.drawStringOnCenter(FontSize.SMALL_FONT, "Cost: "+ prizes[i], x + 250 * i, 500, 200);
 
             }
@@ -185,6 +174,9 @@ public class Game implements KeyListener, IGameObserver {
                 characterPanel.onKeyClicked(keyCode);
                 break;
             case IN_GAME:
+                if(keyCode.equals(KeyEvent.VK_B)){
+                    gameStatus = GameStatus.OPENED_DIALOG;
+                }
                 break;
             case FIGHT_GAME:
                 break;

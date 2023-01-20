@@ -1,6 +1,6 @@
 package com.akgroup.project.gui.views;
 
-import com.akgroup.project.engine.FontSize;
+import com.akgroup.project.graphics.FontSize;
 import com.akgroup.project.engine.IGameObserver;
 import com.akgroup.project.graphics.*;
 import com.akgroup.project.graphics.Font;

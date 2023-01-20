@@ -17,6 +17,10 @@ public class SpriteManager {
         loadSprite(Sprite.HEROES, "entity/heroes.png");
         loadSprite(Sprite.CLASSIC_FONT, "font/font.png");
         loadSprite(Sprite.BLUE_FONT, "font/font_blue.png");
+        loadSprite(Sprite.HEAL_POTION, "item/potion.png");
+        loadSprite(Sprite.DAGGER, "item/dagger.png");
+        loadSprite(Sprite.KNIFE, "item/knife.png");
+        loadSprite(Sprite.STICK, "item/stick.png");
     }
 
     private static void loadSprite(Sprite sprite, String filename) throws IOException {
