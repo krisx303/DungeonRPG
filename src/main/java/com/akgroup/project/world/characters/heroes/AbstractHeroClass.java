@@ -24,7 +24,7 @@ public abstract class AbstractHeroClass implements ICharacter {
 
     public abstract BasicWeapon getWeapon();
 
-    public int getHealth() {
+    public int getCurrHealth() {
         if (health==0){
             health = findHealth();
         }

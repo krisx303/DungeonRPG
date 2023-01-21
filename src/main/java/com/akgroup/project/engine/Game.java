@@ -2,9 +2,7 @@ package com.akgroup.project.engine;
 
 import com.akgroup.project.graphics.FontManager;
 import com.akgroup.project.graphics.SpriteManager;
-import com.akgroup.project.gui.views.CharacterInteractionView;
-import com.akgroup.project.gui.views.InteractionView;
-import com.akgroup.project.gui.views.ShopInteractionView;
+import com.akgroup.project.gui.views.*;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.util.Vector2d;
@@ -40,8 +38,8 @@ public class Game implements KeyListener, IGameObserver {
     private GameStatus gameStatus;
     private Shop shop;
     private Hero hero;
+    private AbstractEnemyClass enemy;
     private InteractionView interactionView;
-
 
 
     public Game(Dimension dimension, Graphics2D graphics2D) {
@@ -79,16 +77,16 @@ public class Game implements KeyListener, IGameObserver {
         worldPosition.move((left + right) * velocity, (up + down) * velocity);
         player.update(left + right, up + down);
         Vector2d playerPosition = player.getTilePosition();
-        if(worldMap.hasDoorToUnvisitedRoomAtPosition(playerPosition)) {
+        if (worldMap.hasDoorToUnvisitedRoomAtPosition(playerPosition)) {
             int roomID = worldMap.getRoomIDAtPosition(playerPosition);
-            if(roomID != lastAskedRoomID){
+            if (roomID != lastAskedRoomID) {
                 System.out.println("Open dialog for room with ID: " + roomID);
                 gameStatus = GameStatus.OPENED_DIALOG;
                 //TODO
                 //currentDialog = new RoomEnterDialog();
                 lastAskedRoomID = roomID;
             }
-        }else{
+        } else {
             lastAskedRoomID = -1;
         }
     }
@@ -97,7 +95,7 @@ public class Game implements KeyListener, IGameObserver {
         graphics2D.setColor(new Color(33, 30, 39));
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
         switch (gameStatus) {
-            case CHARACTER_CHOOSING, SHOP -> interactionView.render();
+            case CHARACTER_CHOOSING, SHOP, FIGHT_GAME, INVENTORY -> interactionView.render();
             case IN_GAME -> renderGame();
         }
     }
@@ -117,77 +115,35 @@ public class Game implements KeyListener, IGameObserver {
     }
 
 
-    public boolean fight(Hero hero, AbstractEnemyClass enemy) {
-        while (hero.getHealth() > 0 && enemy.getHealth() > 0) {
-            heroAttack(hero, enemy);
-            if (enemy.getHealth() <= 0) {
-                enemyDefeated(enemy, hero);
-                return true;
-            }
-            enemyAttack(enemy, hero);
-        }
-        if (hero.getHealth() <= 0) {
-            gameOver();
-            return false;
-        }
-        return true;
-    }
-
-    private void enemyAttack(AbstractEnemyClass enemy, Hero hero) {
-        int dmgGiven = NumberGenerator.countDamageGiven(enemy.getDamage(), 0, 0);
-        takeDamageHero(hero, dmgGiven);
-    }
-
-    private void takeDamageHero(Hero hero, int dmgToTake) {
-        hero.setHealth(NumberGenerator.countDamageTaken(dmgToTake, hero.getArmor(), hero.getDodge()));
-    }
-
-    private void heroAttack(Hero hero, AbstractEnemyClass enemy) {
-        int dmgGiven = NumberGenerator.countDamageGiven(hero.getWeapon().getDamage(), hero.getCrit(), hero.getAdditionalDamage());
-        takeDamageEnemy(enemy, dmgGiven);
-    }
-
-    private void takeDamageEnemy(AbstractEnemyClass enemy, int dmgToTake) {
-        enemy.setHealth(Math.max(0, enemy.getHealth() - dmgToTake));
-    }
-
-    private void gameOver() {
-        System.out.println("Game Over");
-    }
-
-    private void enemyDefeated(AbstractEnemyClass enemy, Hero hero) {
-        EntityDrop entityDrop = new EntityDrop(worldMap.getLevel(), enemy);
-        updateHeroValues(entityDrop, hero);
-        System.out.println("You won with enemy");
-    }
-
-    private void updateHeroValues(EntityDrop entityDrop, Hero hero) {
-        int addedLvls = hero.addExp(entityDrop.getExp());
-        if (addedLvls > 0) {
-            //TODO do sth
-        }
-        hero.setMoney(hero.getMoney() + entityDrop.getMoney());
-    }
-
     private void keyToggledOn(Integer keyCode) {
         switch (gameStatus) {
             case CHARACTER_CHOOSING:
-            case SHOP:
+            case SHOP, FIGHT_GAME, INVENTORY:
                 interactionView.onKeyClicked(keyCode);
                 break;
             case IN_GAME:
-                if(keyCode.equals(KeyEvent.VK_B)){
+                if (keyCode.equals(KeyEvent.VK_B)) {
                     gameStatus = GameStatus.SHOP;
                     interactionView = new ShopInteractionView(graphics2D, this, shop, hero);
+                } else if (keyCode.equals(KeyEvent.VK_F)) {
+                    gameStatus = GameStatus.FIGHT_GAME;
+//                    TODO kiedy walka z bossem (jesli będzie enemy to ez, ale nie mamy go tak łatow jak hero)
+//                    enemy nie jest inicjalizowany
+                    interactionView = new FightInteractionView(graphics2D, this, worldMap.getLevel(), false, hero, enemy);
+                } else if (keyCode.equals(KeyEvent.VK_I)) {
+                    gameStatus = GameStatus.INVENTORY;
+                    interactionView = new InventoryInteractionView(graphics2D, this, hero);
                 }
                 break;
         }
     }
 
-    private void keyToggledOff(Integer keyCode) {}
+    private void keyToggledOff(Integer keyCode) {
+    }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -205,7 +161,7 @@ public class Game implements KeyListener, IGameObserver {
     @Override
     public void onCharacterChoose(int classID) {
         AbstractHeroClass heroClass;
-        switch (classID){
+        switch (classID) {
             default -> heroClass = new Ninja();
             case 1 -> heroClass = new Fighter();
             case 2 -> heroClass = new Mage();

@@ -1,6 +1,6 @@
 package com.akgroup.project.world.characters;
 
 public interface ICharacter {
-    int getHealth();
+    int getCurrHealth();
 
 }

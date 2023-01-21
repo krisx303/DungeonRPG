@@ -4,7 +4,7 @@ import com.akgroup.project.graphics.Sprite;
 import com.akgroup.project.world.inventory.IInventoryObject;
 
 public enum Potion implements IInventoryObject {
-    HEALTH(50, "heal potion");
+    HEALTH(50, "Heal potion");
 
     private final int strength;
     private final String name;
@@ -22,5 +22,9 @@ public enum Potion implements IInventoryObject {
     @Override
     public Sprite getSprite() {
         return Sprite.HEAL_POTION;
+    }
+
+    public int getStrength() {
+        return strength;
     }
 }

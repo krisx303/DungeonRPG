@@ -2,8 +2,9 @@ package com.akgroup.project.graphics;
 
 public enum FontSize {
     BIG_FONT(32, 36),
-    SMALL_FONT(18, 18);
+    SMALL_FONT(18, 18),
 
+    MEDIUM_FONT(24, 24);
 
     public final int fontSize;
     public final int offset;

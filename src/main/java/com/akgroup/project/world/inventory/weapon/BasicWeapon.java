@@ -4,9 +4,9 @@ import com.akgroup.project.graphics.Sprite;
 import com.akgroup.project.world.inventory.IInventoryObject;
 
 public enum BasicWeapon implements IInventoryObject, IWeapon {
-    DAGGER(15, 20, "dagger", Sprite.DAGGER),
-    KNIFE(19, 30, "knife", Sprite.KNIFE),
-    STICK(32, 50, "stick", Sprite.STICK);
+    DAGGER(15, 20, "Dagger", Sprite.DAGGER),
+    KNIFE(19, 30, "Knife", Sprite.KNIFE),
+    STICK(32, 50, "Stick", Sprite.STICK);
 
     private final int damage;
     private final int size;

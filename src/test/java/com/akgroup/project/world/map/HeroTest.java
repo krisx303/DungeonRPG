@@ -33,7 +33,7 @@ class HeroTest {
 
     @Test
     void getHealth() {
-        System.out.println(mage.getHealth());
-        assertTrue(mage.getHealth() >= 450 && mage.getHealth() <= 500);
+        System.out.println(mage.getCurrHealth());
+        assertTrue(mage.getCurrHealth() >= 450 && mage.getCurrHealth() <= 500);
     }
 }

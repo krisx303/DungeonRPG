@@ -3,13 +3,15 @@ package com.akgroup.project.world.map;
 import com.akgroup.project.world.characters.heroes.AbstractHeroClass;
 import com.akgroup.project.world.exp.ExpClass;
 import com.akgroup.project.world.inventory.Inventory;
+import com.akgroup.project.world.inventory.mixtures.Potion;
 import com.akgroup.project.world.inventory.weapon.IWeapon;
 
 public class Hero {
 
     private final AbstractHeroClass character;
     private final Inventory inventory;
-    private int health;
+    private int currHealth;
+    private int maxHealth;
     private IWeapon weapon;
     private int money;
     private int additionalDamage;
@@ -18,11 +20,12 @@ public class Hero {
     public Hero(AbstractHeroClass character) {
         this.character = character;
         this.inventory = new Inventory();
-        this.health = character.findHealth();
+        this.currHealth = character.findHealth();
         this.weapon = character.getWeapon();
         this.money = 0;
         this.additionalDamage = 0;
         this.expClass = new ExpClass();
+        this.maxHealth = currHealth;
     }
 
     public Inventory getInventory() {
@@ -37,12 +40,20 @@ public class Hero {
         return money;
     }
 
-    public int getHealth() {
-        return health;
+    public int getCurrHealth() {
+        return currHealth;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public void setCurrHealth(int currHealth) {
+        this.currHealth = currHealth;
     }
 
     public void setWeapon(IWeapon weapon) {
@@ -79,6 +90,10 @@ public class Hero {
 
     public int addExp(int newExp) {
         return expClass.increaseExp(newExp);
+    }
+
+    public void healFromPotion(Potion potion) {
+        currHealth = Math.min(currHealth + potion.getStrength(), maxHealth);
     }
 }
 

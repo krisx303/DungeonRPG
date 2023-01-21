@@ -88,6 +88,5 @@ public class ShopInteractionView extends InteractionView {
 
     @Override
     public void initView() {
-        return;
     }
 }

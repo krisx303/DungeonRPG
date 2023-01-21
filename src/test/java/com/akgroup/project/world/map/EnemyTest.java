@@ -23,8 +23,8 @@ class EnemyTest {
 
     @Test
     void getHealth() {
-        assertEquals(normalBoss.getHealth(), 220);
-        assertEquals(weakEnemy.getHealth(), 40);
+        assertEquals(normalBoss.getCurrHealth(), 220);
+        assertEquals(weakEnemy.getCurrHealth(), 40);
     }
 
 }

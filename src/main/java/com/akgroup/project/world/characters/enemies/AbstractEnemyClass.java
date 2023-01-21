@@ -8,19 +8,21 @@ public abstract class AbstractEnemyClass implements ICharacter {
     private final int exp;
     //    chances (0-100) that item will be dropped after killing enemy
     private final int item;
-    private int health;
+    private int currHealth;
+    private final int maxHealth;
     private final int damage;
 
-    public AbstractEnemyClass(int money, int exp, int item, int health, int damage) {
+    public AbstractEnemyClass(int money, int exp, int item, int maxHealth, int damage) {
         this.money = money;
         this.exp = exp;
         this.item = item;
-        this.health = health;
+        this.currHealth = maxHealth;
+        this.maxHealth = maxHealth;
         this.damage = damage;
     }
 
-    public int getHealth() {
-        return health;
+    public int getCurrHealth() {
+        return currHealth;
     }
 
     public int getMoney() {
@@ -39,7 +41,11 @@ public abstract class AbstractEnemyClass implements ICharacter {
         return damage;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public void setCurrHealth(int currHealth) {
+        this.currHealth = currHealth;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 }
