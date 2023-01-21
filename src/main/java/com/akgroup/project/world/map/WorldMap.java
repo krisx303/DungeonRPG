@@ -2,6 +2,8 @@ package com.akgroup.project.world.map;
 
 import com.akgroup.project.engine.WorldPosition;
 import com.akgroup.project.util.Vector2d;
+import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.map.object.Chest;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -70,5 +72,22 @@ public class WorldMap {
 
     public int getRoomIDAtPosition(Vector2d position) {
         return currentLevel.getRoomForDoor(position);
+    }
+
+    public AbstractEnemyClass getEnemyInRoom(int roomID) {
+        return currentLevel.getEnemyInRoom(roomID);
+    }
+
+    public boolean hasRoomChest(int roomID){
+        return currentLevel.hasRoomChest(roomID);
+    }
+
+    public void removeRoomBarriers(int roomID){
+        currentLevel.removeRoomBarriers(roomID);
+    }
+
+    public void markRoomAsVisited(int roomID) {
+        currentLevel.removeRoomBarriers(roomID);
+        visitedRooms.add(roomID);
     }
 }

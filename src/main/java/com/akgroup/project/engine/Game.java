@@ -3,13 +3,12 @@ package com.akgroup.project.engine;
 import com.akgroup.project.graphics.FontManager;
 import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.gui.views.*;
-import com.akgroup.project.util.EntityDrop;
-import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
 import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
+import com.akgroup.project.world.map.object.Chest;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -27,9 +26,6 @@ public class Game implements KeyListener, IGameObserver {
 
     private final Player player;
     private final WorldPosition worldPosition;
-
-    // private EnemyEntity actualEnemyEntity;
-
     private final HashSet<Integer> pressedKeys;
 
     private final WorldMap worldMap;
@@ -38,7 +34,6 @@ public class Game implements KeyListener, IGameObserver {
     private GameStatus gameStatus;
     private Shop shop;
     private Hero hero;
-    private AbstractEnemyClass enemy;
     private InteractionView interactionView;
 
 
@@ -80,22 +75,30 @@ public class Game implements KeyListener, IGameObserver {
         if (worldMap.hasDoorToUnvisitedRoomAtPosition(playerPosition)) {
             int roomID = worldMap.getRoomIDAtPosition(playerPosition);
             if (roomID != lastAskedRoomID) {
-                System.out.println("Open dialog for room with ID: " + roomID);
-                gameStatus = GameStatus.OPENED_DIALOG;
-                //TODO
-                //currentDialog = new RoomEnterDialog();
                 lastAskedRoomID = roomID;
+                openRoomDialog();
             }
         } else {
             lastAskedRoomID = -1;
         }
     }
 
+
+    private void openRoomDialog(){
+        System.out.println("Open dialog for room with ID: " + lastAskedRoomID);
+        gameStatus = GameStatus.OPENED_DIALOG;
+        AbstractEnemyClass enemyInRoom = worldMap.getEnemyInRoom(lastAskedRoomID);
+        boolean chestInRoom = worldMap.hasRoomChest(lastAskedRoomID);
+        interactionView = new EnterRoomInteractionView(graphics2D, this, lastAskedRoomID, enemyInRoom, chestInRoom);
+    }
+
     public void render() {
-        graphics2D.setColor(new Color(33, 30, 39));
-        graphics2D.fillRect(0, 0, getWidth(), getHeight());
+        if(gameStatus != GameStatus.OPENED_DIALOG){
+            graphics2D.setColor(new Color(33, 30, 39));
+            graphics2D.fillRect(0, 0, getWidth(), getHeight());
+        }
         switch (gameStatus) {
-            case CHARACTER_CHOOSING, SHOP, FIGHT_GAME, INVENTORY -> interactionView.render();
+            case CHARACTER_CHOOSING, SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG -> interactionView.render();
             case IN_GAME -> renderGame();
         }
     }
@@ -118,18 +121,13 @@ public class Game implements KeyListener, IGameObserver {
     private void keyToggledOn(Integer keyCode) {
         switch (gameStatus) {
             case CHARACTER_CHOOSING:
-            case SHOP, FIGHT_GAME, INVENTORY:
+            case SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG:
                 interactionView.onKeyClicked(keyCode);
                 break;
             case IN_GAME:
                 if (keyCode.equals(KeyEvent.VK_B)) {
                     gameStatus = GameStatus.SHOP;
                     interactionView = new ShopInteractionView(graphics2D, this, shop, hero);
-                } else if (keyCode.equals(KeyEvent.VK_F)) {
-                    gameStatus = GameStatus.FIGHT_GAME;
-//                    TODO kiedy walka z bossem (jesli będzie enemy to ez, ale nie mamy go tak łatow jak hero)
-//                    enemy nie jest inicjalizowany
-                    interactionView = new FightInteractionView(graphics2D, this, worldMap.getLevel(), false, hero, enemy);
                 } else if (keyCode.equals(KeyEvent.VK_I)) {
                     gameStatus = GameStatus.INVENTORY;
                     interactionView = new InventoryInteractionView(graphics2D, this, hero);
@@ -175,5 +173,17 @@ public class Game implements KeyListener, IGameObserver {
     public void onInteractionExit() {
         gameStatus = GameStatus.IN_GAME;
         interactionView = null;
+    }
+
+    @Override
+    public void enterRoom(int roomID, AbstractEnemyClass enemy) {
+        if(enemy != null){
+            //TODO kiedy walka z bossem (jesli będzie enemy to ez, ale nie mamy go tak łatow jak hero)
+            gameStatus = GameStatus.FIGHT_GAME;
+            interactionView = new FightInteractionView(graphics2D, this, worldMap.getLevel(), false, hero, enemy);
+        }else{
+            gameStatus = GameStatus.IN_GAME;
+            worldMap.markRoomAsVisited(roomID);
+        }
     }
 }

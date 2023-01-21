@@ -3,6 +3,7 @@ package com.akgroup.project.world.map;
 import com.akgroup.project.Main;
 import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.util.Vector2d;
+import com.akgroup.project.world.map.object.Chest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -40,6 +41,12 @@ public class MapLoader {
     private static final int MIN_ROOM_DOOR = 365;
     private static final int MIN_ROOM = 397;
 
+    private static final int DOOR_BARRIER = 170;
+
+    private static final int ENEMY = 582;
+
+    private static final int CHEST = 254;
+
     private static void loadRooms(MapLevel mapLevel, Element informationLayer, Element objectLayer) {
         String information = informationLayer.getElementsByTagName("data").item(0).getTextContent();
         String[] infoRows = information.split("\n");
@@ -54,7 +61,15 @@ public class MapLoader {
                 if(infoVal >= MIN_ROOM){
                     if(!objectCells[col].equals("0")){
                         int objectVal = Integer.parseInt(objectCells[col]);
-                        mapLevel.addRoomObject(infoVal - MIN_ROOM, objectVal);
+                        if(objectVal == DOOR_BARRIER){
+                            mapLevel.addRoomBarrier(infoVal - MIN_ROOM, new Vector2d(col, row-1));
+                        }else if(objectVal == ENEMY){
+                            mapLevel.addWeakEnemyToRoom(infoVal - MIN_ROOM);
+                        }else if(objectVal == CHEST){
+                            Chest chest = new Chest();
+                            mapLevel.addChestAtPosition(infoVal - MIN_ROOM, new Vector2d(col, row-1), chest);
+                            //mapLevel.addRoomObject(infoVal - MIN_ROOM, objectVal);
+                        }
                     }
                 }else if(infoVal >= MIN_ROOM_DOOR){
                     mapLevel.addRoomDoor(new Vector2d(col, row-1), infoVal - MIN_ROOM_DOOR);

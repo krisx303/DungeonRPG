@@ -1,6 +1,9 @@
 package com.akgroup.project.world.map;
 
 import com.akgroup.project.util.Vector2d;
+import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
+import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
 
 import java.awt.image.BufferedImage;
@@ -15,16 +18,20 @@ public class MapLevel {
     private BufferedImage background;
     private BufferedImage foreground;
     private final HashSet<Vector2d> barriers;
-
     private final HashMap<Vector2d, Integer> roomDoors;
-    private HashMap<Vector2d, IMapObject> objects;
+    private final HashMap<Integer, AbstractEnemyClass> enemies;
+    private final HashMap<Integer, List<Vector2d>> roomBarriers;
 
-    private final HashMap<Integer, List<Integer>> rooms;
+    private final HashSet<Integer> roomChests;
+
+    private final HashMap<Vector2d, IMapObject> mapObjects;
 
     public MapLevel(){
+        this.mapObjects = new HashMap<>();
+        this.roomChests = new HashSet<>();
+        this.roomBarriers = new HashMap<>();
+        this.enemies = new HashMap<>();
         this.barriers = new HashSet<>();
-        this.objects = new HashMap<>();
-        this.rooms = new HashMap<>();
         this.roomDoors = new HashMap<>();
     }
 
@@ -45,10 +52,10 @@ public class MapLevel {
     }
 
     public void addRoomObject(int roomID, int objectID) {
-        if(!rooms.containsKey(roomID)){
-            rooms.put(roomID, new ArrayList<>());
-        }
-        rooms.get(roomID).add(objectID);
+//        if(!roomObjects.containsKey(roomID)){
+//            roomObjects.put(roomID, new ArrayList<>());
+//        }
+//        rooms.get(roomID).add(objectID);
     }
 
     public void addRoomDoor(Vector2d position, int roomID){
@@ -65,5 +72,39 @@ public class MapLevel {
 
     public int getRoomForDoor(Vector2d position) {
         return roomDoors.get(position);
+    }
+
+    public void addRoomBarrier(int roomID, Vector2d position) {
+        if(!roomBarriers.containsKey(roomID)){
+            roomBarriers.put(roomID, new ArrayList<>());
+        }
+        roomBarriers.get(roomID).add(position);
+        barriers.add(position);
+    }
+
+    public void removeRoomBarriers(int roomID){
+        List<Vector2d> vector2ds = roomBarriers.get(roomID);
+        vector2ds.forEach(barriers::remove);
+    }
+
+    public AbstractEnemyClass getEnemyInRoom(int roomID) {
+        if(enemies.containsKey(roomID)){
+            return enemies.get(roomID);
+        }
+        return null;
+    }
+
+    public boolean hasRoomChest(int roomID) {
+        return roomChests.contains(roomID);
+    }
+
+    public void addWeakEnemyToRoom(int i) {
+        //TODO level is mocked
+        enemies.put(i, new WeakEnemy(1));
+    }
+
+    public void addChestAtPosition(int roomID, Vector2d position, Chest chest) {
+        mapObjects.put(position, chest);
+        roomChests.add(roomID);
     }
 }
