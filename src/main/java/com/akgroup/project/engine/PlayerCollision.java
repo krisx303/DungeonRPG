@@ -1,6 +1,7 @@
 package com.akgroup.project.engine;
 
 import com.akgroup.project.world.map.WorldMap;
+import com.akgroup.project.world.map.object.IMapObject;
 
 public class PlayerCollision {
     private int upperEdge;
@@ -41,6 +42,12 @@ public class PlayerCollision {
             case 3 -> collisionOnThree(upperLeft, lowerLeft, upperRight, lowerRight);
             default -> {}
         }
+    }
+
+    public IMapObject getObjectOnInteraction(int x, int y, int horizontal, int vertical){
+        int predictionY = (y + height/2) + vertical*40;
+        int predictionX = (x + width/2) + horizontal*40;
+        return worldMap.getMapObjectAt(predictionX / 48, predictionY / 48);
     }
 
     private void collisionOnThree(boolean upperLeft, boolean lowerLeft, boolean upperRight, boolean lowerRight) {

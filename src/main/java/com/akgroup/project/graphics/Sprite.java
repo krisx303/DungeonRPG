@@ -8,5 +8,6 @@ public enum Sprite {
     HEAL_POTION,
     DAGGER,
     KNIFE,
-    STICK;
+    STICK,
+    CHEST, SHOP;
 }

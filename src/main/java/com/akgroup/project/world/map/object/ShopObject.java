@@ -2,7 +2,7 @@ package com.akgroup.project.world.map.object;
 
 import com.akgroup.project.graphics.Sprite;
 
-public class Chest implements IMapObject {
+public class ShopObject implements IMapObject {
     @Override
     public void onInteraction() {
 
@@ -10,6 +10,6 @@ public class Chest implements IMapObject {
 
     @Override
     public Sprite getSprite() {
-        return Sprite.CHEST;
+        return Sprite.SHOP;
     }
 }

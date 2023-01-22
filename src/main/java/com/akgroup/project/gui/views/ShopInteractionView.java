@@ -14,9 +14,10 @@ import java.awt.event.KeyEvent;
 
 public class ShopInteractionView extends InteractionView {
     private final Shop shop;
-    private Font classic, blue;
+    private final Font classic;
+    private final Font blue;
     private int actualChoice = 0;
-    private Hero hero;
+    private final Hero hero;
 
     public ShopInteractionView(Graphics2D graphics2D, IGameObserver observer, Shop shop, Hero hero) {
         super(graphics2D, observer);
@@ -27,20 +28,20 @@ public class ShopInteractionView extends InteractionView {
     }
 
 
-    public void buyItemFromShop(int itemIndex, Hero hero, Shop shop) {
+    public void buyItemFromShop() {
         if (hero.getInventory().isInventoryFull()) {
             return;
         }
-        if (shop.getValueOfiItemFromPosition(itemIndex) > hero.getMoney()) {
+        if (shop.getValueOfiItemFromPosition(actualChoice) > hero.getMoney()) {
             return;
         }
-        IInventoryObject newItem = shop.getItemFromPosition(itemIndex);
+        IInventoryObject newItem = shop.getItemFromPosition(actualChoice);
         if (newItem == null) {
             return;
         }
-        hero.setMoney(hero.getMoney() - shop.getValueOfiItemFromPosition(itemIndex));
+        hero.setMoney(hero.getMoney() - shop.getValueOfiItemFromPosition(actualChoice));
         hero.getInventory().addItemToInventory(newItem);
-        shop.removeItemFromPosition(itemIndex);
+        shop.removeItemFromPosition(actualChoice);
     }
 
 
@@ -83,6 +84,9 @@ public class ShopInteractionView extends InteractionView {
         }
         else if (keyCode.equals(KeyEvent.VK_ESCAPE)){
             observer.onInteractionExit();
+        }
+        else if( keyCode.equals(KeyEvent.VK_ENTER)){
+            buyItemFromShop();
         }
     }
 

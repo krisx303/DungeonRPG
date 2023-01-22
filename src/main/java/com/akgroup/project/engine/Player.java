@@ -3,6 +3,7 @@ package com.akgroup.project.engine;
 import com.akgroup.project.graphics.*;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.map.WorldMap;
+import com.akgroup.project.world.map.object.IMapObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -23,6 +24,8 @@ public class Player {
     private final PlayerCollision collision;
     private final WorldPosition worldPosition;
 
+    private IMapObject interactionObject;
+
     private boolean playingAnimation = false;
 
     public Player(WorldPosition worldPosition, WorldMap worldMap) {
@@ -35,6 +38,9 @@ public class Player {
         int playerX = worldPosition.getPositionX() + startX;
         int playerY = worldPosition.getPositionY() + startY;
         collision.update(playerX, playerY);
+        if(horizontal != 0 || vertical != 0) {
+            interactionObject = collision.getObjectOnInteraction(playerX, playerY, horizontal, vertical);
+        }
         if((horizontal == 0 && vertical == 0)){
             playingAnimation = false;
         }else{
@@ -88,5 +94,13 @@ public class Player {
 
     public Vector2d getTilePosition(){
         return new Vector2d(getXPosition()/48, getYPosition()/48);
+    }
+
+    public boolean hasInteractionObject(){
+        return interactionObject != null;
+    }
+
+    public IMapObject getInteractionObject() {
+        return interactionObject;
     }
 }

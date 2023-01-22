@@ -1,9 +1,11 @@
 package com.akgroup.project.world.map;
 
+import com.akgroup.project.engine.Shop;
 import com.akgroup.project.engine.WorldPosition;
+import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
-import com.akgroup.project.world.map.object.Chest;
+import com.akgroup.project.world.map.object.IMapObject;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,6 +25,8 @@ public class WorldMap {
 
     private final HashSet<Integer> visitedRooms;
 
+    private Shop shop;
+
     public WorldMap(Graphics2D graphics2D){
         this.graphics2D = graphics2D;
         this.visitedRooms = new HashSet<>();
@@ -32,9 +36,10 @@ public class WorldMap {
     // mockup method
     //TODO rewrite this method
     public void loadMapLevel(){
-        levelID = 1;
+        levelID = 2;
         try {
             currentLevel = MapLoader.loadMapLevel(levelID);
+            shop = new Shop(levelID);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             throw new RuntimeException(e);
         }
@@ -44,6 +49,9 @@ public class WorldMap {
         int x = -worldPosition.getPositionX();
         int y = -worldPosition.getPositionY();
         graphics2D.drawImage(currentLevel.getBackground(), x, y, 50*48, 50*48, null);
+        currentLevel.getObjects().forEach((pos, obj) -> {
+            graphics2D.drawImage(SpriteManager.getSprite(obj.getSprite()), x + 48*pos.x, y+48*pos.y, 48, 48, null);
+        });
         // render objects
         // render animations
     }
@@ -89,5 +97,13 @@ public class WorldMap {
     public void markRoomAsVisited(int roomID) {
         currentLevel.removeRoomBarriers(roomID);
         visitedRooms.add(roomID);
+    }
+
+    public IMapObject getMapObjectAt(int x, int y) {
+        Vector2d pos = new Vector2d(x, y);
+        if(currentLevel.getObjects().containsKey(pos)){
+            return currentLevel.getObjects().get(pos);
+        }
+        return null;
     }
 }

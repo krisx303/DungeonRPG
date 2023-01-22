@@ -1,6 +1,7 @@
 package com.akgroup.project.engine;
 
 import com.akgroup.project.graphics.FontManager;
+import com.akgroup.project.graphics.FontSize;
 import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.gui.views.*;
 import com.akgroup.project.util.Vector2d;
@@ -9,6 +10,8 @@ import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
 import com.akgroup.project.world.map.object.Chest;
+import com.akgroup.project.world.map.object.IMapObject;
+import com.akgroup.project.world.map.object.ShopObject;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -107,6 +110,9 @@ public class Game implements KeyListener, IGameObserver {
     private void renderGame() {
         worldMap.render(worldPosition);
         player.render(graphics2D);
+        if(player.hasInteractionObject()){
+            FontManager.getManager().getClassic().drawStringOnCenter(FontSize.BIG_FONT, "Interact [E]", 0, 600, 800);
+        }
     }
 
     private int getHeight() {
@@ -125,12 +131,17 @@ public class Game implements KeyListener, IGameObserver {
                 interactionView.onKeyClicked(keyCode);
                 break;
             case IN_GAME:
-                if (keyCode.equals(KeyEvent.VK_B)) {
-                    gameStatus = GameStatus.SHOP;
-                    interactionView = new ShopInteractionView(graphics2D, this, shop, hero);
-                } else if (keyCode.equals(KeyEvent.VK_I)) {
+                if (keyCode.equals(KeyEvent.VK_I)) {
                     gameStatus = GameStatus.INVENTORY;
                     interactionView = new InventoryInteractionView(graphics2D, this, hero);
+                } else if(keyCode.equals(KeyEvent.VK_E)){
+                    if(player.hasInteractionObject()){
+                        IMapObject interactionObject = player.getInteractionObject();
+                        if(interactionObject instanceof ShopObject){
+                            gameStatus = GameStatus.SHOP;
+                            interactionView = new ShopInteractionView(graphics2D, this, shop, hero);
+                        }
+                    }
                 }
                 break;
         }

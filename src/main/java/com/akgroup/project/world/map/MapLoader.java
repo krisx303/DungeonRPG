@@ -20,34 +20,39 @@ public class MapLoader {
 
     public static MapLevel loadMapLevel(int level) throws IOException, ParserConfigurationException, SAXException {
         MapLevel mapLevel = new MapLevel();
-        BufferedImage background = SpriteManager.loadBufferedImage("dungeon level %d.png".formatted(level));
+        BufferedImage background = SpriteManager.loadBufferedImage("map/dungeon level %d.png".formatted(level));
         mapLevel.setBackground(background);
         loadTileMap(mapLevel, level);
         return mapLevel;
     }
 
     private static void loadTileMap(MapLevel mapLevel, int level) throws IOException, ParserConfigurationException, SAXException {
-        String path = "dungeon level %d.tmx".formatted(level);
+        String path = "map/dungeon level %d.tmx".formatted(level);
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         Document doc = builder.parse(Main.class.getResourceAsStream(path));
         doc.getDocumentElement().normalize();
         NodeList layers = doc.getElementsByTagName("layer");
         loadBarriers(mapLevel, (Element) layers.item(0));
-        loadRooms(mapLevel, (Element) layers.item(3), (Element) layers.item(2));
+        loadRooms(mapLevel, (Element) layers.item(4), (Element) layers.item(3), level);
     }
 
 
     private static final int MIN_ROOM_DOOR = 365;
     private static final int MIN_ROOM = 397;
+    private static final int MAX_ROOM = MIN_ROOM + 23;
 
     private static final int DOOR_BARRIER = 170;
+
+    private static final int SHOP_BARRIER = 169;
+
+    private static final int SHOP = 473;
 
     private static final int ENEMY = 582;
 
     private static final int CHEST = 254;
 
-    private static void loadRooms(MapLevel mapLevel, Element informationLayer, Element objectLayer) {
+    private static void loadRooms(MapLevel mapLevel, Element informationLayer, Element objectLayer, int level) {
         String information = informationLayer.getElementsByTagName("data").item(0).getTextContent();
         String[] infoRows = information.split("\n");
         String object = objectLayer.getElementsByTagName("data").item(0).getTextContent();
@@ -58,23 +63,35 @@ public class MapLoader {
             String[] objectCells = objectRows[row].split(",");
             for (int col = 0; col < infoCells.length; col++) {
                 int infoVal = Integer.parseInt(infoCells[col]);
-                if(infoVal >= MIN_ROOM){
-                    if(!objectCells[col].equals("0")){
-                        int objectVal = Integer.parseInt(objectCells[col]);
-                        if(objectVal == DOOR_BARRIER){
-                            mapLevel.addRoomBarrier(infoVal - MIN_ROOM, new Vector2d(col, row-1));
-                        }else if(objectVal == ENEMY){
-                            mapLevel.addWeakEnemyToRoom(infoVal - MIN_ROOM);
-                        }else if(objectVal == CHEST){
-                            Chest chest = new Chest();
-                            mapLevel.addChestAtPosition(infoVal - MIN_ROOM, new Vector2d(col, row-1), chest);
-                            //mapLevel.addRoomObject(infoVal - MIN_ROOM, objectVal);
-                        }
-                    }
-                }else if(infoVal >= MIN_ROOM_DOOR){
-                    mapLevel.addRoomDoor(new Vector2d(col, row-1), infoVal - MIN_ROOM_DOOR);
-                }
+                int objectVal = Integer.parseInt(objectCells[col]);
+                loadMapInformation(mapLevel, infoVal, objectVal, level, new Vector2d(col, row-1));
             }
+        }
+    }
+
+    private static void loadMapInformation(MapLevel mapLevel, int infoVal, int objectVal, int level, Vector2d pos) {
+        if(infoVal > MAX_ROOM){
+            if(infoVal == SHOP){
+                mapLevel.addShopAtPosition(pos);
+            }
+        }else if(infoVal >= MIN_ROOM){
+            int roomID = infoVal - MIN_ROOM;
+            if(objectVal == DOOR_BARRIER){
+                mapLevel.addRoomBarrier(roomID, pos);
+            }
+            else if(objectVal == ENEMY){
+                mapLevel.addWeakEnemyToRoom(roomID, level);
+            }
+            else if(objectVal == CHEST){
+                Chest chest = new Chest();
+                mapLevel.addChestAtPosition(roomID, pos, chest);
+            }
+        }else if(infoVal >= MIN_ROOM_DOOR){
+            mapLevel.addRoomDoor(pos, infoVal - MIN_ROOM_DOOR);
+        }
+
+        if(objectVal == SHOP_BARRIER){
+            mapLevel.addBarrier(pos);
         }
     }
 

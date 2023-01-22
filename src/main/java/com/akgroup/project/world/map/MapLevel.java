@@ -5,6 +5,7 @@ import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
 import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
 import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
+import com.akgroup.project.world.map.object.ShopObject;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -21,9 +22,7 @@ public class MapLevel {
     private final HashMap<Vector2d, Integer> roomDoors;
     private final HashMap<Integer, AbstractEnemyClass> enemies;
     private final HashMap<Integer, List<Vector2d>> roomBarriers;
-
     private final HashSet<Integer> roomChests;
-
     private final HashMap<Vector2d, IMapObject> mapObjects;
 
     public MapLevel(){
@@ -98,13 +97,21 @@ public class MapLevel {
         return roomChests.contains(roomID);
     }
 
-    public void addWeakEnemyToRoom(int i) {
-        //TODO level is mocked
-        enemies.put(i, new WeakEnemy(1));
+    public void addWeakEnemyToRoom(int roomID, int level) {
+        enemies.put(roomID, new WeakEnemy(level));
     }
 
     public void addChestAtPosition(int roomID, Vector2d position, Chest chest) {
         mapObjects.put(position, chest);
         roomChests.add(roomID);
+        barriers.add(position);
+    }
+
+    public void addShopAtPosition(Vector2d vector2d) {
+        this.mapObjects.put(vector2d, new ShopObject());
+    }
+
+    public HashMap<Vector2d, IMapObject> getObjects() {
+        return mapObjects;
     }
 }
