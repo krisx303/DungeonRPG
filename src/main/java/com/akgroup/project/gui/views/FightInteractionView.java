@@ -106,6 +106,9 @@ public class FightInteractionView extends InteractionView {
             //TODO do sth
         }
         hero.setMoney(hero.getMoney() + entityDrop.getMoney());
+        if (entityDrop.getItem() != null && !hero.getInventory().isInventoryFull()) {
+            hero.getInventory().addItemToInventory(entityDrop.getItem());
+        }
     }
 
     @Override
