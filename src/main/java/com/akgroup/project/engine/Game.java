@@ -7,6 +7,8 @@ import com.akgroup.project.gui.views.*;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.characters.enemies.bosses.NormalBoss;
+import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
 import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
@@ -54,8 +56,10 @@ public class Game implements KeyListener, IGameObserver {
         player.loadTextures();
         worldMap.loadMapLevel();
         gameStatus = GameStatus.CHARACTER_CHOOSING;
+//        gameStatus = GameStatus.ENEMY_DEFEATED;
         FontManager.init(graphics2D);
         this.interactionView = new CharacterInteractionView(graphics2D, this);
+//        this.interactionView = new EntityDefeatedInteractionView(graphics2D, this, new EntityDrop(4, new NormalBoss(4)), hero);
         this.shop = new Shop(1);
     }
 
@@ -100,9 +104,9 @@ public class Game implements KeyListener, IGameObserver {
             graphics2D.setColor(new Color(33, 30, 39));
             graphics2D.fillRect(0, 0, getWidth(), getHeight());
         }
-        if(gameStatus == GameStatus.IN_GAME){
+        if (gameStatus == GameStatus.IN_GAME) {
             renderGame();
-        }else{
+        } else {
             interactionView.render();
         }
     }
@@ -128,7 +132,7 @@ public class Game implements KeyListener, IGameObserver {
     private void keyToggledOn(Integer keyCode) {
         switch (gameStatus) {
             case CHARACTER_CHOOSING:
-            case SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG:
+            case SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG, ENEMY_DEFEATED:
                 interactionView.onKeyClicked(keyCode);
                 break;
             case IN_GAME:
@@ -207,6 +211,6 @@ public class Game implements KeyListener, IGameObserver {
     @Override
     public void onEnemyDefeated(EntityDrop drop) {
         gameStatus = GameStatus.ENEMY_DEFEATED;
-        interactionView = new EntityDefeatedInteractionView(graphics2D, this, drop);
+        interactionView = new EntityDefeatedInteractionView(graphics2D, this, drop, hero);
     }
 }

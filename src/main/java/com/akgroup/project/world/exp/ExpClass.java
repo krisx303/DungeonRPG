@@ -6,11 +6,14 @@ public class ExpClass {
     private int currHeroLvl;
     private int currLvlIndex;
 
+    private int lvlPointsToAdd;
+
     public ExpClass() {
         this.exp = 0;
         this.LVL_RANGES = new int[]{10, 50, 150, 250, 500, 100};
         this.currHeroLvl = 1;
         this.currLvlIndex = 0;
+        this.lvlPointsToAdd = 0;
     }
 
     public int getCurrHeroLvl() {
@@ -18,7 +21,7 @@ public class ExpClass {
     }
 
     public int increaseExp(int newExp) {
-        this.exp += exp;
+        this.exp += newExp;
         return increaseLvlIfNecessary();
     }
 
@@ -28,8 +31,17 @@ public class ExpClass {
             increaseLvl();
             increaseLvlIndex();
             counter++;
+            lvlPointsToAdd++;
         }
         return counter;
+    }
+
+    public int getLvlPointsToAdd() {
+        return lvlPointsToAdd;
+    }
+
+    public void usePointLvl() {
+        lvlPointsToAdd -= 1;
     }
 
     private void increaseLvl() {
