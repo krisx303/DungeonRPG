@@ -58,7 +58,7 @@ public class EntityDefeatedInteractionView extends InteractionView {
         } else if (keyCode.equals(KeyEvent.VK_UP) && actualChoice > 0) {
             actualChoice--;
         } else if (keyCode.equals(KeyEvent.VK_ESCAPE)) {
-            observer.onInteractionExit();
+            observer.onEnemyDropReceived();
         } else if (keyCode.equals(KeyEvent.VK_ENTER) && hero.getLvlsToAdd() > 0) {
             if (actualChoice == 0) {
                 hero.setNewAbility("health", 15);

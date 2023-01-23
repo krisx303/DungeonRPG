@@ -220,4 +220,10 @@ public class Game implements KeyListener, IGameObserver {
         gameStatus = GameStatus.ENEMY_DEFEATED;
         interactionView = new EntityDefeatedInteractionView(graphics2D, this, drop, hero);
     }
+
+    @Override
+    public void onEnemyDropReceived() {
+        gameStatus = GameStatus.IN_GAME;
+        worldMap.markRoomAsVisited(lastAskedRoomID);
+    }
 }

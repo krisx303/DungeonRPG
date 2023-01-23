@@ -13,4 +13,6 @@ public interface IGameObserver {
     void onGameOver();
 
     void onEnemyDefeated(EntityDrop drop);
+
+    void onEnemyDropReceived();
 }
