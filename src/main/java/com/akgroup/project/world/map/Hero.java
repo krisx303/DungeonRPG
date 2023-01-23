@@ -95,5 +95,10 @@ public class Hero {
     public void healFromPotion(Potion potion) {
         currHealth = Math.min(currHealth + potion.getStrength(), maxHealth);
     }
+
+    public AbstractHeroClass getCharacter() {
+        return character;
+    }
+
 }
 
