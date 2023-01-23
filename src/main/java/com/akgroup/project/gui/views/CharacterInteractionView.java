@@ -41,7 +41,7 @@ public class CharacterInteractionView extends InteractionView{
             graphics2D.fillRect(x + 160 * i, 150, 150, 185);
             graphics2D.setColor(new Color(33, 30, 39));
             graphics2D.fillRect(x + 5 + 160 * i, 155, 140, 175);
-            graphics2D.drawImage(heroesSprites.getSprite(0, i), x + 5 + 160 * i, 155, 140, 175, null);
+            graphics2D.drawImage(heroesSprites.getSprite(1, i), x + 5 + 160 * i, 155, 140, 175, null);
             classic.drawStringOnCenter(FontSize.SMALL_FONT, heroesClassNames[i], i * 160 + 80, 355, 150);
         }
         classic.drawStringOnCenter(FontSize.SMALL_FONT, "crit:", 2, 380, 120);

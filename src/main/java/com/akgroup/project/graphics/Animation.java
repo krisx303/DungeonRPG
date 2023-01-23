@@ -12,7 +12,7 @@ public class Animation {
     private int counter;
 
     public Animation(BufferedImage[] frames){
-        this(frames, 5);
+        this(frames, 7);
     }
 
     public Animation(BufferedImage[] frames, int delay){
@@ -32,7 +32,7 @@ public class Animation {
         return frames[currentFrame];
     }
 
-    public BufferedImage getFirstFrame() {
-        return frames[0];
+    public BufferedImage getSecondFrame() {
+        return frames[1];
     }
 }

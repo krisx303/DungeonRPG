@@ -65,18 +65,18 @@ public class Player {
 //        graphics2D.fillRect(380, 380, 40, 40);
         BufferedImage frame = currentAnimation.getFrame();
         if(!playingAnimation){
-            frame = currentAnimation.getFirstFrame();
+            frame = currentAnimation.getSecondFrame();
         }
-        graphics2D.drawImage(frame, startX-25, startY-30, width*2, height*2, null);
+        graphics2D.drawImage(frame, startX-25, startY-30, width*2, width*2, null);
     }
 
-    public void loadTextures() {
-        BufferedImage bufferedImage = SpriteManager.getSprite(Sprite.PLAYER);
-        SpriteSheet spriteSheet = new SpriteSheet(bufferedImage, 8, 4, 32, 32);
-        animationToRight = spriteSheet.createAnimation(0);
-        animationToLeft = spriteSheet.createAnimation(1);
-        animationToDown = spriteSheet.createAnimation(2);
-        animationToUp = spriteSheet.createAnimation(3);
+    public void loadTextures(int classID) {
+        BufferedImage bufferedImage = SpriteManager.getSprite(Sprite.HEROES);
+        SpriteSheet spriteSheet = new SpriteSheet(bufferedImage, 4, 16, 24, 30);
+        animationToDown = spriteSheet.createAnimation(classID);
+        animationToRight = spriteSheet.createAnimation(classID+4);
+        animationToUp = spriteSheet.createAnimation(classID+8);
+        animationToLeft = spriteSheet.createAnimation(classID+12);
         currentAnimation = animationToDown;
     }
 
@@ -102,5 +102,9 @@ public class Player {
 
     public IMapObject getInteractionObject() {
         return interactionObject;
+    }
+
+    public void resetInteraction() {
+        interactionObject = null;
     }
 }

@@ -7,14 +7,13 @@ import com.akgroup.project.gui.views.*;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
-import com.akgroup.project.world.characters.enemies.bosses.NormalBoss;
-import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
 import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
 import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
 import com.akgroup.project.world.map.object.ShopObject;
+import com.akgroup.project.world.map.object.Stairs;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -53,11 +52,11 @@ public class Game implements KeyListener, IGameObserver {
 
     public void initGame() throws IOException {
         SpriteManager.loadSprites();
-        player.loadTextures();
         worldMap.loadLevels();
         gameStatus = GameStatus.CHARACTER_CHOOSING;
         FontManager.init(graphics2D);
         this.interactionView = new CharacterInteractionView(graphics2D, this);
+        loadLevel(1, true);
     }
 
     public void update() {
@@ -158,6 +157,13 @@ public class Game implements KeyListener, IGameObserver {
                                 System.out.println(((Chest) interactionObject).getItem() + " " + ((Chest) interactionObject).getMoney());
                                 interactionView = new ChestView(graphics2D, this, (Chest) interactionObject, hero);
                             }
+                        }else if(interactionObject instanceof Stairs stairs){
+                            if(stairs.areStairsUp()){
+                                loadLevel(worldMap.getCurrentLevelID()-1, false);
+                            }else{
+                                loadLevel(worldMap.getCurrentLevelID()+1, true);
+                            }
+                            player.resetInteraction();
                         }
                     }
                 } else if (keyCode.equals(KeyEvent.VK_U)) {
@@ -169,10 +175,13 @@ public class Game implements KeyListener, IGameObserver {
         }
     }
 
+    private void loadLevel(int levelID, boolean goingDown){
     private void loadLevel(int levelID) {
         worldMap.loadLevel(levelID);
-        worldPosition.setPositionX(0);
-        worldPosition.setPositionY(0);
+        Vector2d pos = worldMap.getStartPos(goingDown);
+        System.out.println(pos);
+        worldPosition.setPositionX(-380+pos.x*48+10);
+        worldPosition.setPositionY(-380+pos.y*48);
     }
 
     private void keyToggledOff(Integer keyCode) {
@@ -206,6 +215,7 @@ public class Game implements KeyListener, IGameObserver {
             case 3 -> heroClass = new Heavy();
         }
         this.hero = new Hero(heroClass);
+        player.loadTextures(classID);
         onInteractionExit();
     }
 

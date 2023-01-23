@@ -6,6 +6,7 @@ import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
 import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
 import com.akgroup.project.world.map.object.ShopObject;
+import com.akgroup.project.world.map.object.Stairs;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class MapLevel {
     private final HashSet<Integer> roomChests;
     private final HashMap<Vector2d, IMapObject> mapObjects;
 
+
+    private Vector2d posDown, posUp;
     private final HashSet<Integer> visitedRooms;
 
     public MapLevel(){
@@ -117,5 +120,26 @@ public class MapLevel {
 
     public void addVisitedRoom(int roomID) {
         visitedRooms.add(roomID);
+    }
+
+    public void addStairs(Vector2d pos, Stairs stairs) {
+        this.mapObjects.put(pos, stairs);
+        this.addBarrier(pos);
+    }
+
+    public void addStartPosDown(Vector2d pos) {
+        posDown = pos;
+    }
+
+    public void addStartPosUp(Vector2d pos) {
+        posUp = pos;
+    }
+
+    public Vector2d getStartPosDown() {
+        return posDown;
+    }
+
+    public Vector2d getStartPosUp() {
+        return posUp;
     }
 }
