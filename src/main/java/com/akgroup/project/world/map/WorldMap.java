@@ -114,4 +114,12 @@ public class WorldMap {
     public Shop getShop() {
         return levelShops.get(currentLevelID);
     }
+
+    public Vector2d getStartPos(boolean goingDown) {
+        if(goingDown){
+            return currentLevel.getStartPosDown();
+        }else{
+            return currentLevel.getStartPosUp();
+        }
+    }
 }

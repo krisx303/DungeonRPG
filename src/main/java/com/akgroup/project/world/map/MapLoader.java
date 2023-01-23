@@ -4,6 +4,7 @@ import com.akgroup.project.Main;
 import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.map.object.Chest;
+import com.akgroup.project.world.map.object.Stairs;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -52,6 +53,13 @@ public class MapLoader {
 
     private static final int CHEST = 254;
 
+    private static final int STAIRS_UP = 324;
+
+    private static final int STAIRS_DOWN = 325;
+
+    private static final int START_POS_WHEN_GOING_DOWN = 331;
+    private static final int START_POS_WHEN_GOING_UP = 330;
+
     private static void loadRooms(MapLevel mapLevel, Element informationLayer, Element objectLayer, int level) {
         String information = informationLayer.getElementsByTagName("data").item(0).getTextContent();
         String[] infoRows = information.split("\n");
@@ -88,6 +96,13 @@ public class MapLoader {
             }
         }else if(infoVal >= MIN_ROOM_DOOR){
             mapLevel.addRoomDoor(pos, infoVal - MIN_ROOM_DOOR);
+        }else {
+            switch (infoVal) {
+                case STAIRS_UP -> mapLevel.addStairs(pos, new Stairs(true));
+                case STAIRS_DOWN -> mapLevel.addStairs(pos, new Stairs(false));
+                case START_POS_WHEN_GOING_DOWN -> mapLevel.addStartPosDown(pos);
+                case START_POS_WHEN_GOING_UP -> mapLevel.addStartPosUp(pos);
+            }
         }
 
         if(objectVal == SHOP_BARRIER){

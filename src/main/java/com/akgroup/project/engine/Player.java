@@ -103,4 +103,8 @@ public class Player {
     public IMapObject getInteractionObject() {
         return interactionObject;
     }
+
+    public void resetInteraction() {
+        interactionObject = null;
+    }
 }
