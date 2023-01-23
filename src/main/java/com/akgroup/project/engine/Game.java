@@ -157,31 +157,26 @@ public class Game implements KeyListener, IGameObserver {
                                 System.out.println(((Chest) interactionObject).getItem() + " " + ((Chest) interactionObject).getMoney());
                                 interactionView = new ChestView(graphics2D, this, (Chest) interactionObject, hero);
                             }
-                        }else if(interactionObject instanceof Stairs stairs){
-                            if(stairs.areStairsUp()){
-                                loadLevel(worldMap.getCurrentLevelID()-1, false);
-                            }else{
-                                loadLevel(worldMap.getCurrentLevelID()+1, true);
+                        } else if (interactionObject instanceof Stairs stairs) {
+                            if (stairs.areStairsUp()) {
+                                loadLevel(worldMap.getCurrentLevelID() - 1, false);
+                            } else {
+                                loadLevel(worldMap.getCurrentLevelID() + 1, true);
                             }
                             player.resetInteraction();
                         }
                     }
-                } else if (keyCode.equals(KeyEvent.VK_U)) {
-                    loadLevel(worldMap.getCurrentLevelID() + 1);
-                } else if (keyCode.equals(KeyEvent.VK_Y)) {
-                    loadLevel(worldMap.getCurrentLevelID() - 1);
                 }
                 break;
         }
     }
 
-    private void loadLevel(int levelID, boolean goingDown){
-    private void loadLevel(int levelID) {
+    private void loadLevel(int levelID, boolean goingDown) {
         worldMap.loadLevel(levelID);
         Vector2d pos = worldMap.getStartPos(goingDown);
         System.out.println(pos);
-        worldPosition.setPositionX(-380+pos.x*48+10);
-        worldPosition.setPositionY(-380+pos.y*48);
+        worldPosition.setPositionX(-380 + pos.x * 48 + 10);
+        worldPosition.setPositionY(-380 + pos.y * 48);
     }
 
     private void keyToggledOff(Integer keyCode) {
