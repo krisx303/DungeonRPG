@@ -25,12 +25,15 @@ public class MapLevel {
     private final HashSet<Integer> roomChests;
     private final HashMap<Vector2d, IMapObject> mapObjects;
 
+    private final HashSet<Integer> visitedRooms;
+
     public MapLevel(){
         this.mapObjects = new HashMap<>();
         this.roomChests = new HashSet<>();
         this.roomBarriers = new HashMap<>();
         this.enemies = new HashMap<>();
         this.barriers = new HashSet<>();
+        this.visitedRooms = new HashSet<>();
         this.roomDoors = new HashMap<>();
     }
 
@@ -48,13 +51,6 @@ public class MapLevel {
 
     public void addBarrier(Vector2d vector) {
         barriers.add(vector);
-    }
-
-    public void addRoomObject(int roomID, int objectID) {
-//        if(!roomObjects.containsKey(roomID)){
-//            roomObjects.put(roomID, new ArrayList<>());
-//        }
-//        rooms.get(roomID).add(objectID);
     }
 
     public void addRoomDoor(Vector2d position, int roomID){
@@ -113,5 +109,13 @@ public class MapLevel {
 
     public HashMap<Vector2d, IMapObject> getObjects() {
         return mapObjects;
+    }
+
+    public boolean hasVisitedRoom(int roomID) {
+        return visitedRooms.contains(roomID);
+    }
+
+    public void addVisitedRoom(int roomID) {
+        visitedRooms.add(roomID);
     }
 }

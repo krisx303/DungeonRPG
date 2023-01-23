@@ -11,37 +11,36 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.HashMap;
 
 /** Wrapper for MapLevel. It is also responsible for rendering all map elements.*/
 public class WorldMap {
 
-    private int levelID;
+    private int currentLevelID;
     private MapLevel currentLevel;
-
-    //TODO List of enemies on this map? Maybe also HashMap
-
+    private final HashMap<Integer, MapLevel> levels;
+    private final HashMap<Integer, Shop> levelShops;
     private final Graphics2D graphics2D;
-
-    private final HashSet<Integer> visitedRooms;
-
-    private Shop shop;
 
     public WorldMap(Graphics2D graphics2D){
         this.graphics2D = graphics2D;
-        this.visitedRooms = new HashSet<>();
+        this.levels = new HashMap<>();
+        this.levelShops = new HashMap<>();
     }
 
 
     // mockup method
     //TODO rewrite this method
-    public void loadMapLevel(){
-        levelID = 2;
+    public void loadLevels() {
+        currentLevelID = 1;
         try {
-            currentLevel = MapLoader.loadMapLevel(levelID);
-            shop = new Shop(levelID);
+            for (int i = 1; i < 3; i++) {
+                levels.put(i, MapLoader.loadMapLevel(i));
+                levelShops.put(i, new Shop(i));
+            }
+            currentLevel = levels.get(currentLevelID);
         } catch (IOException | ParserConfigurationException | SAXException e) {
-            throw new RuntimeException(e);
+            throw new MapLoadingException(e.getMessage());
         }
     }
 
@@ -60,8 +59,8 @@ public class WorldMap {
         return currentLevel.hasBarrierAtPosition(x, y);
     }
 
-    public int getLevel() {
-        return levelID;
+    public int getCurrentLevelID() {
+        return currentLevelID;
     }
 
     public boolean hasDoorAtPosition(Vector2d position){
@@ -75,7 +74,7 @@ public class WorldMap {
     public boolean hasDoorToUnvisitedRoomAtPosition(Vector2d position) {
         if(!hasDoorAtPosition(position)) return false;
         int roomID = getRoomIDAtPosition(position);
-        return !visitedRooms.contains(roomID);
+        return !currentLevel.hasVisitedRoom(roomID);
     }
 
     public int getRoomIDAtPosition(Vector2d position) {
@@ -96,7 +95,7 @@ public class WorldMap {
 
     public void markRoomAsVisited(int roomID) {
         currentLevel.removeRoomBarriers(roomID);
-        visitedRooms.add(roomID);
+        currentLevel.addVisitedRoom(roomID);
     }
 
     public IMapObject getMapObjectAt(int x, int y) {
@@ -105,5 +104,14 @@ public class WorldMap {
             return currentLevel.getObjects().get(pos);
         }
         return null;
+    }
+
+    public void loadLevel(int currentLevelID) {
+        this.currentLevelID = currentLevelID;
+        this.currentLevel = levels.get(currentLevelID);
+    }
+
+    public Shop getShop() {
+        return levelShops.get(currentLevelID);
     }
 }

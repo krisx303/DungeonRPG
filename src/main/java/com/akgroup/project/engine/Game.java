@@ -35,7 +35,6 @@ public class Game implements KeyListener, IGameObserver {
 
     private final int velocity = 3;
     private GameStatus gameStatus;
-    private Shop shop;
     private Hero hero;
     private InteractionView interactionView;
 
@@ -52,11 +51,10 @@ public class Game implements KeyListener, IGameObserver {
     public void initGame() throws IOException {
         SpriteManager.loadSprites();
         player.loadTextures();
-        worldMap.loadMapLevel();
+        worldMap.loadLevels();
         gameStatus = GameStatus.CHARACTER_CHOOSING;
         FontManager.init(graphics2D);
         this.interactionView = new CharacterInteractionView(graphics2D, this);
-        this.shop = new Shop(1);
     }
 
     public void update() {
@@ -140,15 +138,26 @@ public class Game implements KeyListener, IGameObserver {
                         IMapObject interactionObject = player.getInteractionObject();
                         if (interactionObject instanceof ShopObject) {
                             gameStatus = GameStatus.SHOP;
-                            interactionView = new ShopInteractionView(graphics2D, this, shop, hero);
+                            interactionView = new ShopInteractionView(graphics2D, this, worldMap.getShop(), hero);
                         }
                     }
+                }else if(keyCode.equals(KeyEvent.VK_U)) {
+                    loadLevel(worldMap.getCurrentLevelID()+1);
+                }else if(keyCode.equals(KeyEvent.VK_Y)) {
+                    loadLevel(worldMap.getCurrentLevelID()-1);
                 }
                 break;
         }
     }
 
+    private void loadLevel(int levelID){
+        worldMap.loadLevel(levelID);
+        worldPosition.setPositionX(0);
+        worldPosition.setPositionY(0);
+    }
+
     private void keyToggledOff(Integer keyCode) {
+
     }
 
     @Override
@@ -192,7 +201,7 @@ public class Game implements KeyListener, IGameObserver {
         if (enemy != null) {
             //TODO kiedy walka z bossem (jesli będzie enemy to ez, ale nie mamy go tak łatow jak hero)
             gameStatus = GameStatus.FIGHT_GAME;
-            interactionView = new FightInteractionView(graphics2D, this, worldMap.getLevel(), false, hero, enemy);
+            interactionView = new FightInteractionView(graphics2D, this, worldMap.getCurrentLevelID(), false, hero, enemy);
         } else {
             gameStatus = GameStatus.IN_GAME;
             worldMap.markRoomAsVisited(roomID);

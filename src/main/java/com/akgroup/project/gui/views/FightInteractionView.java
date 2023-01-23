@@ -1,7 +1,6 @@
 package com.akgroup.project.gui.views;
 
 import com.akgroup.project.engine.IGameObserver;
-import com.akgroup.project.engine.Player;
 import com.akgroup.project.graphics.*;
 import com.akgroup.project.graphics.Font;
 import com.akgroup.project.util.EntityDrop;
@@ -132,7 +131,7 @@ public class FightInteractionView extends InteractionView {
         }else if(hero.getCharacter() instanceof Heavy){
             id = 3;
         }
-        playerSprite = heroesSprites.getSprite(0, id);
+        playerSprite = heroesSprites.getSprite(1, id);
     }
 
     @Override
