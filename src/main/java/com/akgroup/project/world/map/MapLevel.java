@@ -2,6 +2,7 @@ package com.akgroup.project.world.map;
 
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.characters.enemies.bosses.NormalBoss;
 import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
 import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
@@ -141,5 +142,9 @@ public class MapLevel {
 
     public Vector2d getStartPosUp() {
         return posUp;
+    }
+
+    public void addBoosToRoom(int roomID, int level) {
+        enemies.put(roomID, new NormalBoss(level));
     }
 }

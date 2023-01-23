@@ -60,6 +60,8 @@ public class MapLoader {
     private static final int START_POS_WHEN_GOING_DOWN = 331;
     private static final int START_POS_WHEN_GOING_UP = 330;
 
+    private static final int BOSS = 577;
+
     private static void loadRooms(MapLevel mapLevel, Element informationLayer, Element objectLayer, int level) {
         String information = informationLayer.getElementsByTagName("data").item(0).getTextContent();
         String[] infoRows = information.split("\n");
@@ -89,6 +91,9 @@ public class MapLoader {
             }
             else if(objectVal == ENEMY){
                 mapLevel.addWeakEnemyToRoom(roomID, level);
+            }
+            else if(objectVal == BOSS){
+                mapLevel.addBoosToRoom(roomID, level);
             }
             else if(objectVal == CHEST){
                 Chest chest = new Chest();
