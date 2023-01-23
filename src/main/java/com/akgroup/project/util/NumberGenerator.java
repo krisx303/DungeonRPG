@@ -28,7 +28,7 @@ public class NumberGenerator {
         if (generateNextInt(0, 100) <= dodge) {
             return 0;
         }
-        return Math.toIntExact(Math.round(damage * (100 - armor)));
+        return Math.toIntExact(Math.round(damage * (float)(100 - armor) / 100));
     }
 
     public static int countDamageGiven(int gunDamage, int critChances, int additionalDamage) {

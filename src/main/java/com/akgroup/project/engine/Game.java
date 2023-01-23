@@ -87,7 +87,7 @@ public class Game implements KeyListener, IGameObserver {
     }
 
 
-    private void openRoomDialog(){
+    private void openRoomDialog() {
         System.out.println("Open dialog for room with ID: " + lastAskedRoomID);
         gameStatus = GameStatus.OPENED_DIALOG;
         AbstractEnemyClass enemyInRoom = worldMap.getEnemyInRoom(lastAskedRoomID);
@@ -96,7 +96,7 @@ public class Game implements KeyListener, IGameObserver {
     }
 
     public void render() {
-        if(gameStatus != GameStatus.OPENED_DIALOG){
+        if (gameStatus != GameStatus.OPENED_DIALOG) {
             graphics2D.setColor(new Color(33, 30, 39));
             graphics2D.fillRect(0, 0, getWidth(), getHeight());
         }
@@ -110,7 +110,7 @@ public class Game implements KeyListener, IGameObserver {
     private void renderGame() {
         worldMap.render(worldPosition);
         player.render(graphics2D);
-        if(player.hasInteractionObject()){
+        if (player.hasInteractionObject()) {
             FontManager.getManager().getClassic().drawStringOnCenter(FontSize.BIG_FONT, "Interact [E]", 0, 600, 800);
         }
     }
@@ -134,10 +134,10 @@ public class Game implements KeyListener, IGameObserver {
                 if (keyCode.equals(KeyEvent.VK_I)) {
                     gameStatus = GameStatus.INVENTORY;
                     interactionView = new InventoryInteractionView(graphics2D, this, hero);
-                } else if(keyCode.equals(KeyEvent.VK_E)){
-                    if(player.hasInteractionObject()){
+                } else if (keyCode.equals(KeyEvent.VK_E)) {
+                    if (player.hasInteractionObject()) {
                         IMapObject interactionObject = player.getInteractionObject();
-                        if(interactionObject instanceof ShopObject){
+                        if (interactionObject instanceof ShopObject) {
                             gameStatus = GameStatus.SHOP;
                             interactionView = new ShopInteractionView(graphics2D, this, shop, hero);
                         }
@@ -188,11 +188,11 @@ public class Game implements KeyListener, IGameObserver {
 
     @Override
     public void enterRoom(int roomID, AbstractEnemyClass enemy) {
-        if(enemy != null){
+        if (enemy != null) {
             //TODO kiedy walka z bossem (jesli będzie enemy to ez, ale nie mamy go tak łatow jak hero)
             gameStatus = GameStatus.FIGHT_GAME;
             interactionView = new FightInteractionView(graphics2D, this, worldMap.getLevel(), false, hero, enemy);
-        }else{
+        } else {
             gameStatus = GameStatus.IN_GAME;
             worldMap.markRoomAsVisited(roomID);
         }
