@@ -4,12 +4,12 @@ import com.akgroup.project.graphics.FontManager;
 import com.akgroup.project.graphics.FontSize;
 import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.gui.views.*;
+import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
 import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
-import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
 import com.akgroup.project.world.map.object.ShopObject;
 
@@ -100,9 +100,10 @@ public class Game implements KeyListener, IGameObserver {
             graphics2D.setColor(new Color(33, 30, 39));
             graphics2D.fillRect(0, 0, getWidth(), getHeight());
         }
-        switch (gameStatus) {
-            case CHARACTER_CHOOSING, SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG -> interactionView.render();
-            case IN_GAME -> renderGame();
+        if(gameStatus == GameStatus.IN_GAME){
+            renderGame();
+        }else{
+            interactionView.render();
         }
     }
 
@@ -196,5 +197,16 @@ public class Game implements KeyListener, IGameObserver {
             gameStatus = GameStatus.IN_GAME;
             worldMap.markRoomAsVisited(roomID);
         }
+    }
+
+    @Override
+    public void onGameOver() {
+
+    }
+
+    @Override
+    public void onEnemyDefeated(EntityDrop drop) {
+        gameStatus = GameStatus.ENEMY_DEFEATED;
+        interactionView = new EntityDefeatedInteractionView(graphics2D, this, drop);
     }
 }

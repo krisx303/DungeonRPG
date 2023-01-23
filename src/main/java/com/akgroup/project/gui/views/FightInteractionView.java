@@ -1,16 +1,21 @@
 package com.akgroup.project.gui.views;
 
 import com.akgroup.project.engine.IGameObserver;
+import com.akgroup.project.engine.Player;
+import com.akgroup.project.graphics.*;
 import com.akgroup.project.graphics.Font;
-import com.akgroup.project.graphics.FontManager;
-import com.akgroup.project.graphics.FontSize;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.characters.heroes.Fighter;
+import com.akgroup.project.world.characters.heroes.Heavy;
+import com.akgroup.project.world.characters.heroes.Mage;
+import com.akgroup.project.world.characters.heroes.Ninja;
 import com.akgroup.project.world.map.Hero;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 public class FightInteractionView extends InteractionView {
     private Font classic, blue;
@@ -25,11 +30,11 @@ public class FightInteractionView extends InteractionView {
     //    TODO chcemy ich przyjować tak? czy lepiej przekazać przy wywołaniu funkcji? (imo lepiej tu w konstruktorze)
     private Hero hero;
     private AbstractEnemyClass enemy;
+    private BufferedImage playerSprite;
 
-    public FightInteractionView(Graphics2D graphics2D, IGameObserver observer, int lvl, boolean isItFightWithBoss, Hero hero, AbstractEnemyClass enemy) {
+    public FightInteractionView(Graphics2D graphics2D, IGameObserver observer, int lvl, boolean isItFightWithBoss,
+                                Hero hero, AbstractEnemyClass enemy) {
         super(graphics2D, observer);
-        this.classic = FontManager.getManager().getClassic();
-        this.blue = FontManager.getManager().getBlue();
         this.lvl = lvl;
         this.canPlayerClickAttack = true;
         this.isPlayerClickedAttack = false;
@@ -37,6 +42,7 @@ public class FightInteractionView extends InteractionView {
         this.hero = hero;
         this.enemy = enemy;
         this.isFightEnded = false;
+        this.loadTextures();
     }
 
 
@@ -91,6 +97,7 @@ public class FightInteractionView extends InteractionView {
     private void gameOver() {
         isFightEnded = true;
         System.out.println("Game Over");
+        observer.onGameOver();
     }
 
     private void enemyDefeated(AbstractEnemyClass enemy, Hero hero) {
@@ -98,6 +105,7 @@ public class FightInteractionView extends InteractionView {
         EntityDrop entityDrop = new EntityDrop(lvl, enemy);
         updateHeroValues(entityDrop, hero);
         System.out.println("You won with enemy");
+        observer.onEnemyDefeated(entityDrop);
     }
 
     private void updateHeroValues(EntityDrop entityDrop, Hero hero) {
@@ -111,6 +119,22 @@ public class FightInteractionView extends InteractionView {
         }
     }
 
+    private void loadTextures(){
+        BufferedImage heroes = SpriteManager.getSprite(Sprite.HEROES);
+        SpriteSheet heroesSprites = new SpriteSheet(heroes, 4, 4, 24, 30);
+        int id = 0;
+        if(hero.getCharacter() instanceof Ninja){
+            id = 0;
+        }else if(hero.getCharacter() instanceof Fighter){
+            id = 1;
+        }else if(hero.getCharacter() instanceof Mage){
+            id = 2;
+        }else if(hero.getCharacter() instanceof Heavy){
+            id = 3;
+        }
+        playerSprite = heroesSprites.getSprite(0, id);
+    }
+
     @Override
     public void render() {
         classic.drawStringOnCenter(FontSize.BIG_FONT, "FIGHT", 0, 50, 800);
@@ -119,6 +143,7 @@ public class FightInteractionView extends InteractionView {
         classic.drawStringOnCenter(FontSize.MEDIUM_FONT, String.valueOf(enemy.getCurrHealth()), 570, 280, 200);
         graphics2D.setColor(new Color(119, 78, 0));
         graphics2D.fillRect(30, 310, 200, 300);
+        graphics2D.drawImage(playerSprite, 30, 310, 200, 300, null);
         graphics2D.fillRect(570, 310, 200, 300);
         classic.drawStringOnCenter(FontSize.SMALL_FONT, "To use your attack press space", 0, 750, 800);
     }
@@ -139,6 +164,7 @@ public class FightInteractionView extends InteractionView {
 
     @Override
     public void initView() {
-
+        this.classic = FontManager.getManager().getClassic();
+        this.blue = FontManager.getManager().getBlue();
     }
 }
