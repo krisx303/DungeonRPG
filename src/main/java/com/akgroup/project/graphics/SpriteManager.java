@@ -13,8 +13,7 @@ public class SpriteManager {
 
 
     public static void loadSprites() throws IOException{
-        loadSprite(Sprite.PLAYER, "entity/player.png");
-        loadSprite(Sprite.HEROES, "entity/heroes.png");
+        loadSprite(Sprite.HEROES, "entity/heroes2.png");
         loadSprite(Sprite.CLASSIC_FONT, "font/font.png");
         loadSprite(Sprite.BLUE_FONT, "font/font_blue.png");
         loadSprite(Sprite.HEAL_POTION, "item/potion.png");

@@ -51,7 +51,6 @@ public class Game implements KeyListener, IGameObserver {
 
     public void initGame() throws IOException {
         SpriteManager.loadSprites();
-        player.loadTextures();
         worldMap.loadLevels();
         gameStatus = GameStatus.CHARACTER_CHOOSING;
         FontManager.init(graphics2D);
@@ -194,6 +193,7 @@ public class Game implements KeyListener, IGameObserver {
             case 3 -> heroClass = new Heavy();
         }
         this.hero = new Hero(heroClass);
+        player.loadTextures(classID);
         onInteractionExit();
     }
 
