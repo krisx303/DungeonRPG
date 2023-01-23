@@ -88,12 +88,24 @@ public class Hero {
         return expClass.getCurrHeroLvl();
     }
 
+    public int getLvlsToAdd() {
+        return expClass.getLvlPointsToAdd();
+    }
+
     public int addExp(int newExp) {
         return expClass.increaseExp(newExp);
     }
 
     public void healFromPotion(Potion potion) {
         currHealth = Math.min(currHealth + potion.getStrength(), maxHealth);
+    }
+
+    public void setNewAbility(String option, int value) {
+        switch (option) {
+            case "damage" -> additionalDamage += value;
+            case "health" -> maxHealth += value;
+        }
+        expClass.usePointLvl();
     }
 
     public AbstractHeroClass getCharacter() {
