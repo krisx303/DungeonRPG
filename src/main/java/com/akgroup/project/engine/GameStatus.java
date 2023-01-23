@@ -6,5 +6,8 @@ public enum GameStatus {
     FIGHT_GAME,
     INVENTORY,
     OPENED_DIALOG,
-    ENEMY_DEFEATED, SHOP
+    ENEMY_DEFEATED,
+    SHOP,
+    CHEST,
+    KEY_NOT_FOUND
 }

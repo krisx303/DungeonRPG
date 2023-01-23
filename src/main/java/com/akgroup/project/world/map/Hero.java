@@ -2,7 +2,9 @@ package com.akgroup.project.world.map;
 
 import com.akgroup.project.world.characters.heroes.AbstractHeroClass;
 import com.akgroup.project.world.exp.ExpClass;
+import com.akgroup.project.world.inventory.IInventoryObject;
 import com.akgroup.project.world.inventory.Inventory;
+import com.akgroup.project.world.inventory.key.Key;
 import com.akgroup.project.world.inventory.mixtures.Potion;
 import com.akgroup.project.world.inventory.weapon.IWeapon;
 
@@ -30,6 +32,16 @@ public class Hero {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public int isKeyInInventory() {
+        IInventoryObject[] tmpItems = inventory.getItems();
+        for (int i = 0; i < 10; i++) {
+            if (tmpItems[i] instanceof Key) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public IWeapon getWeapon() {

@@ -12,6 +12,7 @@ import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
 import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
+import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
 import com.akgroup.project.world.map.object.ShopObject;
 
@@ -128,7 +129,7 @@ public class Game implements KeyListener, IGameObserver {
     private void keyToggledOn(Integer keyCode) {
         switch (gameStatus) {
             case CHARACTER_CHOOSING:
-            case SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG, ENEMY_DEFEATED:
+            case SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG, ENEMY_DEFEATED, CHEST, KEY_NOT_FOUND:
                 interactionView.onKeyClicked(keyCode);
                 break;
             case IN_GAME:
@@ -141,18 +142,34 @@ public class Game implements KeyListener, IGameObserver {
                         if (interactionObject instanceof ShopObject) {
                             gameStatus = GameStatus.SHOP;
                             interactionView = new ShopInteractionView(graphics2D, this, worldMap.getShop(), hero);
+                        } else if (interactionObject instanceof Chest) {
+                            if (((Chest) interactionObject).isLocked()) {
+                                if (hero.isKeyInInventory() == -1) {
+                                    gameStatus = GameStatus.KEY_NOT_FOUND;
+                                    interactionView = new ChestNeedsKeyView(graphics2D, this);
+                                    System.out.println("You have to have a key");
+                                } else {
+                                    ((Chest) interactionObject).unlockChest(hero, hero.isKeyInInventory());
+                                    gameStatus = GameStatus.CHEST;
+                                    interactionView = new ChestView(graphics2D, this, (Chest) interactionObject, hero);
+                                }
+                            } else {
+                                gameStatus = GameStatus.CHEST;
+                                System.out.println(((Chest) interactionObject).getItem() + " " + ((Chest) interactionObject).getMoney());
+                                interactionView = new ChestView(graphics2D, this, (Chest) interactionObject, hero);
+                            }
                         }
                     }
-                }else if(keyCode.equals(KeyEvent.VK_U)) {
-                    loadLevel(worldMap.getCurrentLevelID()+1);
-                }else if(keyCode.equals(KeyEvent.VK_Y)) {
-                    loadLevel(worldMap.getCurrentLevelID()-1);
+                } else if (keyCode.equals(KeyEvent.VK_U)) {
+                    loadLevel(worldMap.getCurrentLevelID() + 1);
+                } else if (keyCode.equals(KeyEvent.VK_Y)) {
+                    loadLevel(worldMap.getCurrentLevelID() - 1);
                 }
                 break;
         }
     }
 
-    private void loadLevel(int levelID){
+    private void loadLevel(int levelID) {
         worldMap.loadLevel(levelID);
         worldPosition.setPositionX(0);
         worldPosition.setPositionY(0);

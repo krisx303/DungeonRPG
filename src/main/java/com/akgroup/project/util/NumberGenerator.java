@@ -11,6 +11,16 @@ public class NumberGenerator {
         return random.nextInt(max - min + 1) + min;
     }
 
+    public static int generateMoney(int lvl) {
+        int starting = generateNextInt(1, lvl);
+        starting *= 10;
+        for (int i = 0; i < lvl * 3; i++) {
+            if (NumberGenerator.generateNextInt(0, 100) < 10) {
+                starting++;
+            }
+        }
+        return starting;
+    }
 
     public static BasicWeapon randStartingWeaponForMage() {
         int randNumber = generateNextInt(1, 6);
@@ -28,7 +38,7 @@ public class NumberGenerator {
         if (generateNextInt(0, 100) <= dodge) {
             return 0;
         }
-        return Math.toIntExact(Math.round(damage * (float)(100 - armor) / 100));
+        return Math.toIntExact(Math.round(damage * (float) (100 - armor) / 100));
     }
 
     public static int countDamageGiven(int gunDamage, int critChances, int additionalDamage) {

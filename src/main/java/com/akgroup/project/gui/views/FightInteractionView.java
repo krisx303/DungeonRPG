@@ -55,7 +55,6 @@ public class FightInteractionView extends InteractionView {
                 enemyDefeated(enemy, hero);
                 return true;
             }
-//                TODO trzeba wrzucać wszystko w try???
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -85,8 +84,13 @@ public class FightInteractionView extends InteractionView {
 
     private void heroAttack(Hero hero, AbstractEnemyClass enemy) {
         int dmgGiven = NumberGenerator.countDamageGiven(hero.getWeapon().getDamage(), hero.getCrit(), hero.getAdditionalDamage());
+        heroHealHimself();
         System.out.println(dmgGiven);
         takeDamageEnemy(enemy, dmgGiven);
+    }
+
+    private void heroHealHimself() {
+        hero.setCurrHealth(NumberGenerator.healDamage(hero.getCurrHealth(), hero.getMaxHealth(), hero.getHeal()));
     }
 
     private void takeDamageEnemy(AbstractEnemyClass enemy, int dmgToTake) {
@@ -108,27 +112,24 @@ public class FightInteractionView extends InteractionView {
     }
 
     private void updateHeroValues(EntityDrop entityDrop, Hero hero) {
-        int addedLvls = hero.addExp(entityDrop.getExp());
-        if (addedLvls > 0) {
-            //TODO do sth
-        }
+        hero.addExp(entityDrop.getExp());
         hero.setMoney(hero.getMoney() + entityDrop.getMoney());
         if (entityDrop.getItem() != null && !hero.getInventory().isInventoryFull()) {
             hero.getInventory().addItemToInventory(entityDrop.getItem());
         }
     }
 
-    private void loadTextures(){
+    private void loadTextures() {
         BufferedImage heroes = SpriteManager.getSprite(Sprite.HEROES);
         SpriteSheet heroesSprites = new SpriteSheet(heroes, 4, 4, 24, 30);
         int id = 0;
-        if(hero.getCharacter() instanceof Ninja){
+        if (hero.getCharacter() instanceof Ninja) {
             id = 0;
-        }else if(hero.getCharacter() instanceof Fighter){
+        } else if (hero.getCharacter() instanceof Fighter) {
             id = 1;
-        }else if(hero.getCharacter() instanceof Mage){
+        } else if (hero.getCharacter() instanceof Mage) {
             id = 2;
-        }else if(hero.getCharacter() instanceof Heavy){
+        } else if (hero.getCharacter() instanceof Heavy) {
             id = 3;
         }
         playerSprite = heroesSprites.getSprite(1, id);
