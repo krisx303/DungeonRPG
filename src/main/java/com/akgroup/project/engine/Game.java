@@ -12,6 +12,7 @@ import com.akgroup.project.world.characters.enemies.bosses.NormalBoss;
 import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
+import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
 import com.akgroup.project.world.map.object.ShopObject;
 import com.akgroup.project.world.map.object.Stairs;
@@ -129,7 +130,7 @@ public class Game implements KeyListener, IGameObserver {
     private void keyToggledOn(Integer keyCode) {
         switch (gameStatus) {
             case CHARACTER_CHOOSING:
-            case SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG, ENEMY_DEFEATED:
+            case SHOP, FIGHT_GAME, INVENTORY, OPENED_DIALOG, ENEMY_DEFEATED, CHEST, KEY_NOT_FOUND:
                 interactionView.onKeyClicked(keyCode);
                 break;
             case IN_GAME:
@@ -142,11 +143,27 @@ public class Game implements KeyListener, IGameObserver {
                         if (interactionObject instanceof ShopObject) {
                             gameStatus = GameStatus.SHOP;
                             interactionView = new ShopInteractionView(graphics2D, this, worldMap.getShop(), hero);
-                        }else if(interactionObject instanceof Stairs stairs){
-                            if(stairs.areStairsUp()){
-                                loadLevel(worldMap.getCurrentLevelID()-1, false);
-                            }else{
-                                loadLevel(worldMap.getCurrentLevelID()+1, true);
+                        } else if (interactionObject instanceof Chest) {
+                            if (((Chest) interactionObject).isLocked()) {
+                                if (hero.isKeyInInventory() == -1) {
+                                    gameStatus = GameStatus.KEY_NOT_FOUND;
+                                    interactionView = new ChestNeedsKeyView(graphics2D, this);
+                                    System.out.println("You have to have a key");
+                                } else {
+                                    ((Chest) interactionObject).unlockChest(hero, hero.isKeyInInventory());
+                                    gameStatus = GameStatus.CHEST;
+                                    interactionView = new ChestView(graphics2D, this, (Chest) interactionObject, hero);
+                                }
+                            } else {
+                                gameStatus = GameStatus.CHEST;
+                                System.out.println(((Chest) interactionObject).getItem() + " " + ((Chest) interactionObject).getMoney());
+                                interactionView = new ChestView(graphics2D, this, (Chest) interactionObject, hero);
+                            }
+                        } else if (interactionObject instanceof Stairs stairs) {
+                            if (stairs.areStairsUp()) {
+                                loadLevel(worldMap.getCurrentLevelID() - 1, false);
+                            } else {
+                                loadLevel(worldMap.getCurrentLevelID() + 1, true);
                             }
                             player.resetInteraction();
                         }
@@ -156,12 +173,12 @@ public class Game implements KeyListener, IGameObserver {
         }
     }
 
-    private void loadLevel(int levelID, boolean goingDown){
+    private void loadLevel(int levelID, boolean goingDown) {
         worldMap.loadLevel(levelID);
         Vector2d pos = worldMap.getStartPos(goingDown);
         System.out.println(pos);
-        worldPosition.setPositionX(-380+pos.x*48+10);
-        worldPosition.setPositionY(-380+pos.y*48);
+        worldPosition.setPositionX(-380 + pos.x * 48 + 10);
+        worldPosition.setPositionY(-380 + pos.y * 48);
     }
 
     private void keyToggledOff(Integer keyCode) {

@@ -12,7 +12,7 @@ public class SpriteManager {
     private static final HashMap<Sprite, BufferedImage> sprites = new HashMap<>();
 
 
-    public static void loadSprites() throws IOException{
+    public static void loadSprites() throws IOException {
         loadSprite(Sprite.HEROES, "entity/heroes2.png");
         loadSprite(Sprite.CLASSIC_FONT, "font/font.png");
         loadSprite(Sprite.BLUE_FONT, "font/font_blue.png");
@@ -25,6 +25,7 @@ public class SpriteManager {
         loadSprite(Sprite.FIGHT_BACKGROUND, "fight-background.png");
         loadSprite(Sprite.ENEMY, "entity/enemy.png");
         loadSprite(Sprite.BOSS, "entity/boss.png");
+        loadSprite(Sprite.KEY, "item/key.png");
     }
 
     private static void loadSprite(Sprite sprite, String filename) throws IOException {
@@ -32,7 +33,7 @@ public class SpriteManager {
         sprites.put(sprite, image);
     }
 
-    public static BufferedImage loadBufferedImage(String filename) throws IOException{
+    public static BufferedImage loadBufferedImage(String filename) throws IOException {
         return ImageIO.read(Main.class.getResourceAsStream(filename));
     }
 

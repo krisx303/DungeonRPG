@@ -77,19 +77,19 @@ public class MapLoader {
             for (int col = 0; col < infoCells.length; col++) {
                 int infoVal = Integer.parseInt(infoCells[col]);
                 int objectVal = Integer.parseInt(objectCells[col]);
-                loadMapInformation(mapLevel, infoVal, objectVal, level, new Vector2d(col, row-1));
+                loadMapInformation(mapLevel, infoVal, objectVal, level, new Vector2d(col, row - 1));
             }
         }
     }
 
     private static void loadMapInformation(MapLevel mapLevel, int infoVal, int objectVal, int level, Vector2d pos) {
-        if(infoVal > MAX_ROOM){
-            if(infoVal == SHOP){
+        if (infoVal > MAX_ROOM) {
+            if (infoVal == SHOP) {
                 mapLevel.addShopAtPosition(pos);
             }
-        }else if(infoVal >= MIN_ROOM){
+        } else if (infoVal >= MIN_ROOM) {
             int roomID = infoVal - MIN_ROOM;
-            if(objectVal == DOOR_BARRIER){
+            if (objectVal == DOOR_BARRIER) {
                 mapLevel.addRoomBarrier(roomID, pos);
             }
             else if(objectVal == ENEMY){
@@ -101,12 +101,12 @@ public class MapLoader {
                 mapLevel.addEnemyToRoom(roomID, new FinalBoss());
             }
             else if(objectVal == CHEST){
-                Chest chest = new Chest();
+                Chest chest = new Chest(level);
                 mapLevel.addChestAtPosition(roomID, pos, chest);
             }
-        }else if(infoVal >= MIN_ROOM_DOOR){
+        } else if (infoVal >= MIN_ROOM_DOOR) {
             mapLevel.addRoomDoor(pos, infoVal - MIN_ROOM_DOOR);
-        }else {
+        } else {
             switch (infoVal) {
                 case STAIRS_UP -> mapLevel.addStairs(pos, new Stairs(true));
                 case STAIRS_DOWN -> mapLevel.addStairs(pos, new Stairs(false));
@@ -115,19 +115,19 @@ public class MapLoader {
             }
         }
 
-        if(objectVal == SHOP_BARRIER){
+        if (objectVal == SHOP_BARRIER) {
             mapLevel.addBarrier(pos);
         }
     }
 
-    private static void loadBarriers(MapLevel mapLevel, Element layer){
+    private static void loadBarriers(MapLevel mapLevel, Element layer) {
         String data = layer.getElementsByTagName("data").item(0).getTextContent();
         String[] rows = data.split("\n");
         for (int row = 1; row < rows.length; row++) {
             String[] cells = rows[row].split(",");
             for (int col = 0; col < cells.length; col++) {
-                if(Integer.parseInt(cells[col]) == 172){
-                    mapLevel.addBarrier(new Vector2d(col, row-1));
+                if (Integer.parseInt(cells[col]) == 172) {
+                    mapLevel.addBarrier(new Vector2d(col, row - 1));
                 }
             }
         }

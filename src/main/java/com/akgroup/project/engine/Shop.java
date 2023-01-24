@@ -2,6 +2,7 @@ package com.akgroup.project.engine;
 
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.world.inventory.IInventoryObject;
+import com.akgroup.project.world.inventory.key.Key;
 import com.akgroup.project.world.inventory.mixtures.Potion;
 import com.akgroup.project.world.inventory.weapon.BasicWeapon;
 
@@ -21,23 +22,22 @@ public class Shop {
     //    after creating new Shop you have to run shop.randItems(lvl)  !
     public void randItems() {
         for (int i = 0; i < 3; i++) {
-            if (NumberGenerator.generateNextInt(0, 100) <= 70) {
+            if (NumberGenerator.generateNextInt(0, 100) <= 65) {
                 itemsToBuy[i] = Potion.HEALTH;
                 prizes[i] = level * 5 + 20;
-            }
-            else if (NumberGenerator.generateNextInt(0, 6) <= 3) {
+            } else if (NumberGenerator.generateNextInt(0, 100) <= 40) {
+                itemsToBuy[i] = new Key();
+                prizes[i] = level * 20 + 15;
+            } else if (NumberGenerator.generateNextInt(0, 6) <= 3) {
                 itemsToBuy[i] = BasicWeapon.DAGGER;
                 prizes[i] = level * 15 + 30;
-            }
-            else if (NumberGenerator.generateNextInt(0, 6) <= 3) {
+            } else if (NumberGenerator.generateNextInt(0, 6) <= 3) {
                 itemsToBuy[i] = BasicWeapon.KNIFE;
                 prizes[i] = level * 15 + 35;
-            }
-            else{
+            } else {
                 itemsToBuy[i] = BasicWeapon.STICK;
                 prizes[i] = level * 15 + 45;
             }
-
         }
     }
 

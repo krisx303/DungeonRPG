@@ -12,5 +12,6 @@ public enum Sprite {
     SHOP,
     FIGHT_BACKGROUND,
     BOSS,
-    ENEMY
+    ENEMY,
+    KEY
 }
