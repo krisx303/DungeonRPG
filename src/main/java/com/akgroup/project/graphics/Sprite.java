@@ -8,5 +8,9 @@ public enum Sprite {
     DAGGER,
     KNIFE,
     STICK,
-    CHEST, SHOP;
+    CHEST,
+    SHOP,
+    FIGHT_BACKGROUND,
+    BOSS,
+    ENEMY
 }

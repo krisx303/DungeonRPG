@@ -3,6 +3,7 @@ package com.akgroup.project.gui.views;
 import com.akgroup.project.engine.IGameObserver;
 import com.akgroup.project.graphics.*;
 import com.akgroup.project.graphics.Font;
+import com.akgroup.project.gui.FightDamage;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
@@ -15,6 +16,9 @@ import com.akgroup.project.world.map.Hero;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FightInteractionView extends InteractionView {
     private Font classic, blue;
@@ -26,10 +30,14 @@ public class FightInteractionView extends InteractionView {
     private final boolean isItFightWithBoss;
     private boolean isFightEnded;
 
+    private BufferedImage background;
+
     //    TODO chcemy ich przyjować tak? czy lepiej przekazać przy wywołaniu funkcji? (imo lepiej tu w konstruktorze)
     private Hero hero;
     private AbstractEnemyClass enemy;
-    private BufferedImage playerSprite;
+    private BufferedImage playerSprite, enemySprite;
+
+    private List<FightDamage> damages;
 
     public FightInteractionView(Graphics2D graphics2D, IGameObserver observer, int lvl, boolean isItFightWithBoss,
                                 Hero hero, AbstractEnemyClass enemy) {
@@ -41,6 +49,7 @@ public class FightInteractionView extends InteractionView {
         this.hero = hero;
         this.enemy = enemy;
         this.isFightEnded = false;
+        this.damages = new ArrayList<>();
         this.loadTextures();
     }
 
@@ -51,15 +60,14 @@ public class FightInteractionView extends InteractionView {
             isPlayerClickedAttack = false;
 
             heroAttack(hero, enemy);
-            if (enemy.getCurrHealth() <= 0) {
-                enemyDefeated(enemy, hero);
-                return true;
-            }
-//                TODO trzeba wrzucać wszystko w try???
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
+            }
+            if (enemy.getCurrHealth() <= 0) {
+                enemyDefeated(enemy, hero);
+                return true;
             }
             enemyAttack(enemy, hero);
             canPlayerClickAttack = true;
@@ -73,6 +81,7 @@ public class FightInteractionView extends InteractionView {
 
     private void enemyAttack(AbstractEnemyClass enemy, Hero hero) {
         int dmgGiven = NumberGenerator.countDamageGiven(enemy.getDamage(), 0, 0);
+        damages.add(new FightDamage("-" + dmgGiven, 30, 400));
         System.out.println(dmgGiven);
         takeDamageHero(hero, dmgGiven);
     }
@@ -85,6 +94,7 @@ public class FightInteractionView extends InteractionView {
 
     private void heroAttack(Hero hero, AbstractEnemyClass enemy) {
         int dmgGiven = NumberGenerator.countDamageGiven(hero.getWeapon().getDamage(), hero.getCrit(), hero.getAdditionalDamage());
+        damages.add(new FightDamage("-" + dmgGiven, 570, 400));
         System.out.println(dmgGiven);
         takeDamageEnemy(enemy, dmgGiven);
     }
@@ -120,7 +130,7 @@ public class FightInteractionView extends InteractionView {
 
     private void loadTextures(){
         BufferedImage heroes = SpriteManager.getSprite(Sprite.HEROES);
-        SpriteSheet heroesSprites = new SpriteSheet(heroes, 4, 4, 24, 30);
+        SpriteSheet heroesSprites = new SpriteSheet(heroes, 4, 16, 24, 30);
         int id = 0;
         if(hero.getCharacter() instanceof Ninja){
             id = 0;
@@ -131,20 +141,33 @@ public class FightInteractionView extends InteractionView {
         }else if(hero.getCharacter() instanceof Heavy){
             id = 3;
         }
-        playerSprite = heroesSprites.getSprite(1, id);
+        playerSprite = heroesSprites.getSprite(1, id+4);
+        if(isItFightWithBoss){
+            enemySprite = SpriteManager.getSprite(Sprite.BOSS);
+        }else{
+            enemySprite = SpriteManager.getSprite(Sprite.ENEMY);
+        }
+    }
+
+
+    public void update() {
+
     }
 
     @Override
     public void render() {
+        graphics2D.drawImage(background, 0, 0, 800, 800, null);
         classic.drawStringOnCenter(FontSize.BIG_FONT, "FIGHT", 0, 50, 800);
         classic.drawStringOnCenter(FontSize.MEDIUM_FONT, canPlayerClickAttack ? "Hero is attacking" : "Enemy is attacking", 0, 150, 800);
         classic.drawStringOnCenter(FontSize.MEDIUM_FONT, String.valueOf(hero.getCurrHealth()), 30, 280, 200);
         classic.drawStringOnCenter(FontSize.MEDIUM_FONT, String.valueOf(enemy.getCurrHealth()), 570, 280, 200);
-        graphics2D.setColor(new Color(119, 78, 0));
-        graphics2D.fillRect(30, 310, 200, 300);
         graphics2D.drawImage(playerSprite, 30, 310, 200, 300, null);
-        graphics2D.fillRect(570, 310, 200, 300);
+        graphics2D.drawImage(enemySprite, 570, 310, 200, 300, null);
         classic.drawStringOnCenter(FontSize.SMALL_FONT, "To use your attack press space", 0, 750, 800);
+        damages.forEach(FightDamage::update);
+        damages.forEach(d -> d.render(classic, FontSize.MEDIUM_FONT, 200));
+        damages = damages.stream().filter(FightDamage::isVisible).collect(Collectors.toList());;
+
     }
 
     @Override
@@ -165,5 +188,6 @@ public class FightInteractionView extends InteractionView {
     public void initView() {
         this.classic = FontManager.getManager().getClassic();
         this.blue = FontManager.getManager().getBlue();
+        this.background = SpriteManager.getSprite(Sprite.FIGHT_BACKGROUND);
     }
 }

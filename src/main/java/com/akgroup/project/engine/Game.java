@@ -7,6 +7,8 @@ import com.akgroup.project.gui.views.*;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
+import com.akgroup.project.world.characters.enemies.bosses.FinalBoss;
+import com.akgroup.project.world.characters.enemies.bosses.NormalBoss;
 import com.akgroup.project.world.characters.heroes.*;
 import com.akgroup.project.world.map.Hero;
 import com.akgroup.project.world.map.WorldMap;
@@ -208,7 +210,9 @@ public class Game implements KeyListener, IGameObserver {
         if (enemy != null) {
             //TODO kiedy walka z bossem (jesli będzie enemy to ez, ale nie mamy go tak łatow jak hero)
             gameStatus = GameStatus.FIGHT_GAME;
-            interactionView = new FightInteractionView(graphics2D, this, worldMap.getCurrentLevelID(), false, hero, enemy);
+            boolean isBoss = enemy instanceof NormalBoss || enemy instanceof FinalBoss;
+            System.out.println(isBoss);
+            interactionView = new FightInteractionView(graphics2D, this, worldMap.getCurrentLevelID(), isBoss, hero, enemy);
         } else {
             gameStatus = GameStatus.IN_GAME;
             worldMap.markRoomAsVisited(roomID);

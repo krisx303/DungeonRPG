@@ -34,7 +34,7 @@ public class WorldMap {
     public void loadLevels() {
         currentLevelID = 1;
         try {
-            for (int i = 1; i < 3; i++) {
+            for (int i = 1; i < 5; i++) {
                 levels.put(i, MapLoader.loadMapLevel(i));
                 levelShops.put(i, new Shop(i));
             }

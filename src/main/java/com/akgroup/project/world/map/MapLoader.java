@@ -3,6 +3,9 @@ package com.akgroup.project.world.map;
 import com.akgroup.project.Main;
 import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.util.Vector2d;
+import com.akgroup.project.world.characters.enemies.bosses.FinalBoss;
+import com.akgroup.project.world.characters.enemies.bosses.NormalBoss;
+import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
 import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.Stairs;
 import org.w3c.dom.Document;
@@ -90,10 +93,12 @@ public class MapLoader {
                 mapLevel.addRoomBarrier(roomID, pos);
             }
             else if(objectVal == ENEMY){
-                mapLevel.addWeakEnemyToRoom(roomID, level);
+                mapLevel.addEnemyToRoom(roomID, new WeakEnemy(level));
             }
             else if(objectVal == BOSS){
-                mapLevel.addBoosToRoom(roomID, level);
+                mapLevel.addEnemyToRoom(roomID, new NormalBoss(level));
+            }else if(objectVal == BOSS - 1){
+                mapLevel.addEnemyToRoom(roomID, new FinalBoss());
             }
             else if(objectVal == CHEST){
                 Chest chest = new Chest();

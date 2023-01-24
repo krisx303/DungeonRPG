@@ -2,8 +2,6 @@ package com.akgroup.project.world.map;
 
 import com.akgroup.project.util.Vector2d;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
-import com.akgroup.project.world.characters.enemies.bosses.NormalBoss;
-import com.akgroup.project.world.characters.enemies.weak.WeakEnemy;
 import com.akgroup.project.world.map.object.Chest;
 import com.akgroup.project.world.map.object.IMapObject;
 import com.akgroup.project.world.map.object.ShopObject;
@@ -97,10 +95,6 @@ public class MapLevel {
         return roomChests.contains(roomID);
     }
 
-    public void addWeakEnemyToRoom(int roomID, int level) {
-        enemies.put(roomID, new WeakEnemy(level));
-    }
-
     public void addChestAtPosition(int roomID, Vector2d position, Chest chest) {
         mapObjects.put(position, chest);
         roomChests.add(roomID);
@@ -144,7 +138,7 @@ public class MapLevel {
         return posUp;
     }
 
-    public void addBoosToRoom(int roomID, int level) {
-        enemies.put(roomID, new NormalBoss(level));
+    public void addEnemyToRoom(int roomID, AbstractEnemyClass enemy){
+        enemies.put(roomID, enemy);
     }
 }

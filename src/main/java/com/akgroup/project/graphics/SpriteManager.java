@@ -22,6 +22,9 @@ public class SpriteManager {
         loadSprite(Sprite.STICK, "item/stick.png");
         loadSprite(Sprite.SHOP, "object/shop.png");
         loadSprite(Sprite.CHEST, "object/chest.png");
+        loadSprite(Sprite.FIGHT_BACKGROUND, "fight-background.png");
+        loadSprite(Sprite.ENEMY, "entity/enemy.png");
+        loadSprite(Sprite.BOSS, "entity/boss.png");
     }
 
     private static void loadSprite(Sprite sprite, String filename) throws IOException {
