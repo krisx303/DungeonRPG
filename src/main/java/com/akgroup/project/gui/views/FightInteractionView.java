@@ -60,16 +60,13 @@ public class FightInteractionView extends InteractionView {
             isPlayerClickedAttack = false;
 
             heroAttack(hero, enemy);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+            sleep(500);
             if (enemy.getCurrHealth() <= 0) {
                 enemyDefeated(enemy, hero);
                 return true;
             }
             enemyAttack(enemy, hero);
+            sleep(500);
             canPlayerClickAttack = true;
         }
         if (hero.getCurrHealth() <= 0) {
@@ -81,7 +78,6 @@ public class FightInteractionView extends InteractionView {
 
     private void enemyAttack(AbstractEnemyClass enemy, Hero hero) {
         int dmgGiven = NumberGenerator.countDamageGiven(enemy.getDamage(), 0, 0);
-        damages.add(new FightDamage("-" + dmgGiven, 30, 400));
         System.out.println(dmgGiven);
         takeDamageHero(hero, dmgGiven);
     }
@@ -89,6 +85,11 @@ public class FightInteractionView extends InteractionView {
     private void takeDamageHero(Hero hero, int dmgToTake) {
         int value = NumberGenerator.countDamageTaken(dmgToTake, hero.getArmor(), hero.getDodge());
         System.out.println("value" + value);
+        if (value > 0) {
+            damages.add(new FightDamage("-" + value, 30, 400));
+        } else {
+            damages.add(new FightDamage("dodged", 30, 400));
+        }
         hero.setCurrHealth(hero.getCurrHealth() - value);
     }
 
@@ -101,7 +102,11 @@ public class FightInteractionView extends InteractionView {
     }
 
     private void heroHealHimself() {
-        hero.setCurrHealth(NumberGenerator.healDamage(hero.getCurrHealth(), hero.getMaxHealth(), hero.getHeal()));
+        int dmgHealed = NumberGenerator.healDamage(hero.getCurrHealth(), hero.getMaxHealth(), hero.getHeal());
+        if (dmgHealed - hero.getCurrHealth() > 0) {
+            damages.add(new FightDamage("+" + (dmgHealed - hero.getCurrHealth()), 30, 400));
+        }
+        hero.setCurrHealth(dmgHealed);
     }
 
     private void takeDamageEnemy(AbstractEnemyClass enemy, int dmgToTake) {
@@ -144,10 +149,10 @@ public class FightInteractionView extends InteractionView {
         } else if (hero.getCharacter() instanceof Heavy) {
             id = 3;
         }
-        playerSprite = heroesSprites.getSprite(1, id+4);
-        if(isItFightWithBoss){
+        playerSprite = heroesSprites.getSprite(1, id + 4);
+        if (isItFightWithBoss) {
             enemySprite = SpriteManager.getSprite(Sprite.BOSS);
-        }else{
+        } else {
             enemySprite = SpriteManager.getSprite(Sprite.ENEMY);
         }
     }
@@ -155,6 +160,14 @@ public class FightInteractionView extends InteractionView {
 
     public void update() {
 
+    }
+
+    private void sleep(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -169,7 +182,8 @@ public class FightInteractionView extends InteractionView {
         classic.drawStringOnCenter(FontSize.SMALL_FONT, "To use your attack press space", 0, 750, 800);
         damages.forEach(FightDamage::update);
         damages.forEach(d -> d.render(classic, FontSize.MEDIUM_FONT, 200));
-        damages = damages.stream().filter(FightDamage::isVisible).collect(Collectors.toList());;
+        damages = damages.stream().filter(FightDamage::isVisible).collect(Collectors.toList());
+        ;
 
     }
 
@@ -179,7 +193,7 @@ public class FightInteractionView extends InteractionView {
             isPlayerClickedAttack = true;
             canPlayerClickAttack = false;
             fight();
-        } else if (!isItFightWithBoss && keyCode.equals(KeyEvent.VK_ESCAPE)) {
+        } else if (isItFightWithBoss && keyCode.equals(KeyEvent.VK_ESCAPE)) {
             if (!isFightEnded) {
                 enemy.setCurrHealth(enemy.getMaxHealth());
             }

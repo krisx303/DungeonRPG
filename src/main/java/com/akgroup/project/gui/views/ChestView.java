@@ -37,6 +37,7 @@ public class ChestView extends InteractionView {
                 classic.drawStringOnCenter(FontSize.SMALL_FONT, chest.getMoney() + " money", 300, 250, 200);
             } else {
                 graphics2D.drawImage(SpriteManager.getSprite(chest.getItem().getSprite()), 310, 240, 180, 180, null);
+                classic.drawStringOnCenter(FontSize.SMALL_FONT, chest.getItem().getName() + " money", 300, 440, 200);
             }
         }
         if (chest.getMoney() > 0 || chest.getItem() != null) {

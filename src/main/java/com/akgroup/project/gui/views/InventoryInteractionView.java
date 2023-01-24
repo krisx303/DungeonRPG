@@ -6,6 +6,7 @@ import com.akgroup.project.graphics.FontManager;
 import com.akgroup.project.graphics.FontSize;
 import com.akgroup.project.graphics.SpriteManager;
 import com.akgroup.project.world.inventory.IInventoryObject;
+import com.akgroup.project.world.inventory.key.Key;
 import com.akgroup.project.world.inventory.mixtures.Potion;
 import com.akgroup.project.world.inventory.weapon.BasicWeapon;
 import com.akgroup.project.world.inventory.weapon.IWeapon;
@@ -30,6 +31,7 @@ public class InventoryInteractionView extends InteractionView {
     @Override
     public void render() {
         classic.drawStringOnCenter(FontSize.BIG_FONT, "Inventory", 0, 50, 800);
+        classic.drawStringOnCenter(FontSize.SMALL_FONT, "Lvl: " + hero.getLvl(), 20, 10, 100);
         classic.drawStringOnCenter(FontSize.SMALL_FONT, "Money: " + hero.getMoney(), 590, 10, 200);
         graphics2D.setColor(new Color(119, 78, 0));
         graphics2D.fillRect(50, 150, 190, 190);
@@ -82,6 +84,9 @@ public class InventoryInteractionView extends InteractionView {
             hero.getInventory().removeItemFromIndex(actualChoice);
         } else if (keyCode.equals(KeyEvent.VK_ENTER)) {
             IInventoryObject item = hero.getInventory().getItemFromPosition(actualChoice);
+            if (item instanceof Key) {
+                return;
+            }
             hero.getInventory().removeItemFromIndex(actualChoice);
             if (item instanceof Potion) {
                 hero.healFromPotion((Potion) item);
@@ -91,7 +96,7 @@ public class InventoryInteractionView extends InteractionView {
             }
         } else if (keyCode.equals(KeyEvent.VK_P)) {
 //            tmp for testing
-            hero.setCurrHealth(hero.getCurrHealth()-30);
+            hero.setCurrHealth(hero.getCurrHealth() - 30);
             hero.getInventory().addItemToInventory(Potion.HEALTH);
             hero.getInventory().addItemToInventory(BasicWeapon.DAGGER);
         }

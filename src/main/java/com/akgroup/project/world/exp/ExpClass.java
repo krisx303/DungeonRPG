@@ -10,7 +10,7 @@ public class ExpClass {
 
     public ExpClass() {
         this.exp = 0;
-        this.LVL_RANGES = new int[]{10, 50, 150, 250, 500, 100};
+        this.LVL_RANGES = new int[]{10, 50, 150, 250, 500, 800};
         this.currHeroLvl = 1;
         this.currLvlIndex = 0;
         this.lvlPointsToAdd = 0;
@@ -27,7 +27,7 @@ public class ExpClass {
 
     private int increaseLvlIfNecessary() {
         int counter = 0;
-        while (exp > LVL_RANGES[currHeroLvl]) {
+        while (currHeroLvl < LVL_RANGES.length && exp > LVL_RANGES[currHeroLvl]) {
             increaseLvl();
             increaseLvlIndex();
             counter++;
