@@ -24,7 +24,7 @@ public class Hero {
         this.inventory = new Inventory();
         this.currHealth = character.findHealth();
         this.weapon = character.getWeapon();
-        this.money = 100;
+        this.money = 0;
         this.additionalDamage = 0;
         this.expClass = new ExpClass();
         this.maxHealth = currHealth;

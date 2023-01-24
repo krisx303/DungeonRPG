@@ -9,5 +9,5 @@ public enum GameStatus {
     ENEMY_DEFEATED,
     SHOP,
     CHEST,
-    KEY_NOT_FOUND
+    GAME_OVER, KEY_NOT_FOUND
 }

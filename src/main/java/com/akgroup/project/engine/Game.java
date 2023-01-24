@@ -238,7 +238,8 @@ public class Game implements KeyListener, IGameObserver {
 
     @Override
     public void onGameOver() {
-
+        gameStatus = GameStatus.GAME_OVER;
+        interactionView = new GameOverView(graphics2D, this);
     }
 
     @Override

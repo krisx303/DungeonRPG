@@ -134,6 +134,7 @@ public class FightInteractionView extends InteractionView {
         BufferedImage heroes = SpriteManager.getSprite(Sprite.HEROES);
         SpriteSheet heroesSprites = new SpriteSheet(heroes, 4, 16, 24, 30);
         int id = 0;
+
         if (hero.getCharacter() instanceof Ninja) {
             id = 0;
         } else if (hero.getCharacter() instanceof Fighter) {
