@@ -3,6 +3,7 @@ package com.akgroup.project.gui.views;
 import com.akgroup.project.engine.IGameObserver;
 import com.akgroup.project.graphics.*;
 import com.akgroup.project.graphics.Font;
+import com.akgroup.project.gui.FightDamage;
 import com.akgroup.project.util.EntityDrop;
 import com.akgroup.project.util.NumberGenerator;
 import com.akgroup.project.world.characters.enemies.AbstractEnemyClass;
@@ -131,7 +132,7 @@ public class FightInteractionView extends InteractionView {
 
     private void loadTextures() {
         BufferedImage heroes = SpriteManager.getSprite(Sprite.HEROES);
-        SpriteSheet heroesSprites = new SpriteSheet(heroes, 4, 4, 24, 30);
+        SpriteSheet heroesSprites = new SpriteSheet(heroes, 4, 16, 24, 30);
         int id = 0;
         if (hero.getCharacter() instanceof Ninja) {
             id = 0;
