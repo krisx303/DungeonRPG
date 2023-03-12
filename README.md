@@ -1,7 +1,7 @@
 # DungeonRPG
 Project created for Objective Programming laboratory 
 
-###Adam Misztal, Krzysztof Usnarski
+### Adam Misztal, Krzysztof Usnarski
 
 #### 4 different class with unique statistics
 ![image](https://user-images.githubusercontent.com/57947739/224536856-d7a1593b-fd71-4632-a1ef-99ec3a441c83.png)
